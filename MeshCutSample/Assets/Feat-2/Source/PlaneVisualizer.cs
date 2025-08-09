@@ -1,6 +1,9 @@
 
 using UnityEngine;
 
+/// <summary>
+/// プレイヤーによって描画された線から平面を生成するクラス
+/// </summary>
 public class PlaneVisualizer : MonoBehaviour
 {
     [Tooltip("ギズモとして描画する平面のサイズ")]
@@ -11,7 +14,7 @@ public class PlaneVisualizer : MonoBehaviour
     private bool shouldDraw = false;
 
     /// <summary>
-    /// 描画する平面と、その中心点を設定します。
+    /// 描画する平面と、その中心点を設定するメソッド
     /// </summary>
     public void DrawPlane(Plane plane, Vector3 center)
     {
@@ -21,7 +24,7 @@ public class PlaneVisualizer : MonoBehaviour
     }
 
     /// <summary>
-    /// 平面の描画をクリアします。
+    /// 平面の描画を削除するメソッド
     /// </summary>
     public void ClearPlane()
     {

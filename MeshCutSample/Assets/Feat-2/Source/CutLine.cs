@@ -1,79 +1,61 @@
+
 using UnityEngine;
 
-[RequireComponent(typeof(PlaneVisualizer))]
-public class CutLine : MonoBehaviour
-{
-    [Tooltip("カメラから平面を生成する位置までの距離")]
-    public float planeDistance = 10f;
-
-    [Header("Line Settings")]
-    [Tooltip("描画する線の太さ")]
-    public float lineWidth = 0.05f;
-    [Tooltip("描画する線の色")]
-    public Color lineColor = Color.black;
-
+/// <summary>
+/// マウスのドラッグ操作を検知し、ゲーム内のオブジェクトを切断するための仮想的な平面を生成します。
+/// このクラスは、マウスで画面上に描かれた線を3D空間の切断面として扱い、
+/// その切断面の情報を他のコンポーネント（例：MeshCutter）に提供する役割を担います。
+/// </summary>
+public class CutLine {
+    // 外部から渡される設定とコンポーネント
     private Camera mainCamera;
-    private Vector2 mouseStartPos;
     private PlaneVisualizer planeVisualizer;
     private LineRenderer lineRenderer;
+    private float planeDistance;
 
-    void Start()
+    private Vector2 mouseStartPos;
+    private bool isDragging = false;
+
+	/// <summary>
+	/// コンストラクタ
+	/// </summary>
+	/// <param name="camera"> メインカメラのインスタンス </param>
+	/// <param name="visualizer"> 切断平面を視覚的に表示するためのコンポーネント </param>
+	/// <param name="line"> マウスのドラッグ軌跡を描画するための LineRenderer コンポーネント </param>
+	/// <param name="distance"> カメラから平面までの距離 </param>
+	public CutLine(Camera camera, PlaneVisualizer visualizer, LineRenderer line, float distance)
     {
-        mainCamera = Camera.main;
-        planeVisualizer = GetComponent<PlaneVisualizer>();
-        SetupLineRenderer();
+        mainCamera = camera;
+        planeVisualizer = visualizer;
+        lineRenderer = line;
+        planeDistance = distance;
     }
 
-    /// <summary>
-    /// Line Rendererコンポーネントを初期化し、設定します。
-    /// </summary>
-    void SetupLineRenderer()
+	/// <summary>
+	/// マウスの左ボタン操作を監視し、ドラッグイベントに応じて処理を実行します。
+	/// ドラッグの開始、更新、終了を検知し、切断平面の計算と可視化を行います。
+	/// このメソッドは、外部のUpdateループから毎フレーム呼び出されることを想定しています。
+	/// </summary>
+	public void Tick()
     {
-        GameObject lineObj = new GameObject("CuttingLine");
-        lineObj.transform.SetParent(transform, true);
-        lineRenderer = lineObj.AddComponent<LineRenderer>();
-
-        // シェーダーが見つからない場合のエラーを防ぐため、Unity標準のシェーダーを使う
-        lineRenderer.material = new Material(Shader.Find("Legacy Shaders/Particles/Alpha Blended Premultiply"));
-        
-        // 色と太さを設定
-        lineRenderer.startColor = lineColor;
-        lineRenderer.endColor = lineColor;
-        lineRenderer.startWidth = lineWidth;
-        lineRenderer.endWidth = lineWidth;
-
-        // 頂点数は2 (始点と終点)
-        lineRenderer.positionCount = 2;
-        lineRenderer.useWorldSpace = true;
-
-        // 初期状態では非表示
-        lineRenderer.enabled = false;
-    }
-
-    void Update()
-    {
-        // マウスの左ボタンが押された瞬間
         if (Input.GetMouseButtonDown(0))
         {
+            isDragging = true;
             mouseStartPos = Input.mousePosition;
 
-            // Line Rendererを有効化し、始点を設定
             lineRenderer.enabled = true;
             Vector3 startWorldPos = mainCamera.ScreenPointToRay(mouseStartPos).GetPoint(planeDistance);
             lineRenderer.SetPosition(0, startWorldPos);
             lineRenderer.SetPosition(1, startWorldPos);
         }
-        // マウスの左ボタンが押されている間
-        else if (Input.GetMouseButton(0))
+        else if (Input.GetMouseButton(0) && isDragging)
         {
-            // Line Rendererの終点を現在のマウス位置に更新
             Vector3 currentWorldPos = mainCamera.ScreenPointToRay(Input.mousePosition).GetPoint(planeDistance);
             lineRenderer.SetPosition(1, currentWorldPos);
         }
-        // マウスの左ボタンが離された瞬間
-        else if (Input.GetMouseButtonUp(0))
+        else if (Input.GetMouseButtonUp(0) && isDragging)
         {
-            // Line Rendererを無効化して非表示に
+            isDragging = false;
             lineRenderer.enabled = false;
 
             Vector2 mouseEndPos = Input.mousePosition;
@@ -86,10 +68,8 @@ public class CutLine : MonoBehaviour
 
             Ray startRay = mainCamera.ScreenPointToRay(mouseStartPos);
             Ray endRay = mainCamera.ScreenPointToRay(mouseEndPos);
-
             Vector3 p1 = startRay.GetPoint(planeDistance);
             Vector3 p2 = endRay.GetPoint(planeDistance);
-
             Plane cuttingPlane = new Plane(p1, p2, p1 + mainCamera.transform.forward);
 
             Debug.Log($"Plane Created: Normal = {cuttingPlane.normal}, Distance = {cuttingPlane.distance}");
