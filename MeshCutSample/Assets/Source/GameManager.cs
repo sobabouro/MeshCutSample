@@ -14,7 +14,7 @@ public class GameManager : MonoBehaviour {
     public Color lineColor = Color.black;
 
     // ロジッククラス
-    private CutLine cutLine;
+    private Cutter cutLine;
 
     void Start()
     {
@@ -37,16 +37,33 @@ public class GameManager : MonoBehaviour {
         line.enabled = false;
 
         // --- ロジッククラスのインスタンス化 ---
-        // 3. CutLine (POCO) を new で生成し、依存性を渡す
-        cutLine = new CutLine(Camera.main, visualizer, line, this.planeDistance);
-    }
+        // 3. Cutter (POCO) を new で生成し、依存性を渡す
+        cutLine = new Cutter(Camera.main, visualizer, line, this.planeDistance);
+        cutLine.OnCutReady += CallCut;
+	}
 
     void Update()
     {
-        // CutLineのUpdateロジックを毎フレーム実行する
         if (cutLine != null)
         {
             cutLine.Tick();
+        }
+    }
+
+    private void CallCut(Plane cuttingPlane, RaycastHit raycastHit) {
+		
+        Transform targetTransform = raycastHit.transform;
+        Mesh targetMesh = raycastHit.collider.GetComponent<MeshFilter>().mesh;
+        if (targetMesh != null) {
+            try {
+				// 切断処理を実行
+			}
+			catch (System.Exception e) {
+				Debug.Log("catch: " + e.Message);
+			}
+		}
+        else {
+            return;
         }
     }
 }
