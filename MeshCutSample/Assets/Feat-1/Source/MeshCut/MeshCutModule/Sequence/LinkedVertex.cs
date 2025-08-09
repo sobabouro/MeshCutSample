@@ -1,7 +1,5 @@
-using System;
 using System.Collections.Generic;
 using UnityEngine;
-using CalculationUtils;
 
 namespace Feat1.MeshCut.MeshCutModule {
 
