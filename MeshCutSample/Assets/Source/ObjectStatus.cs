@@ -22,6 +22,19 @@ public class ObjectStatus : MonoBehaviour {
 	/// </summary>
 	private int _statusOfCutableLimit = 5;
 
+
+	/// <summary>
+	/// ステータスを引き継ぐメソッド
+	/// </summary>
+	/// <param name="status"> 引継ぎたいステータス </param>
+	public void TakeOverStatus(ObjectStatus status) {
+		_isGamingObject = status._isGamingObject;
+		_isCuttable = status._isCuttable;
+		CutSarfaceMaterial = status.CutSarfaceMaterial;
+		CutOffset = status.CutOffset;
+		_statusOfCutableLimit = status._statusOfCutableLimit;
+	}
+
 	/// <summary>
 	/// 切断可能かどうかを確認するメソッド
 	/// </summary>
