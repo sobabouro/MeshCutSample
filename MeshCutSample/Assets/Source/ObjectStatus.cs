@@ -11,11 +11,31 @@ public class ObjectStatus : MonoBehaviour {
 	[SerializeField, Tooltip("切断可能オブジェクト")]
 	private bool _isCuttable = true;
 
+	[SerializeField, Tooltip("切断面に割り当てるマテリアル (任意)")]
+	public Material CutSarfaceMaterial;
+
 	/// <summary>
 	/// 切断可能回数の制限
 	/// </summary>
 	private int _statusOfCutableLimit = 5;
 
+	/// <summary>
+	/// 切断可能かどうかを確認するメソッド
+	/// </summary>
+	/// <returns> 切断可能であれば ture, そうでなければ false </returns>
+	public bool IsCuttable() {
+		if (_isGamingObject && _isCuttable) {
+			return true;
+		}
+		else {
+			Debug.Log("This object is not cuttable or not a gaming object.");
+			return false;
+		}
+	}
+
+	/// <summary>
+	/// 切断可能状態を更新するメソッド
+	/// </summary>
 	public void UpdateCutStatus() {
 		if (!_isCuttable) {
 			return;
