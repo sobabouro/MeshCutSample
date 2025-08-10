@@ -14,6 +14,9 @@ public class ObjectStatus : MonoBehaviour {
 	[SerializeField, Tooltip("Ø’f–Ê‚ÉŠ„‚è“–‚Ä‚éƒ}ƒeƒŠƒAƒ‹ (”CˆÓ)")]
 	public Material CutSarfaceMaterial;
 
+	[SerializeField, Range(0.00f, 0.50f), Tooltip("Ø’fŒã‚É‚¸‚ç‚·‹——£ (m)")]
+	public float CutOffset = 0.1f;
+
 	/// <summary>
 	/// Ø’f‰Â”\‰ñ”‚Ì§ŒÀ
 	/// </summary>
