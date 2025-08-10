@@ -52,7 +52,7 @@ public class ObjectStatus : MonoBehaviour {
 	/// <summary>
 	/// 切断可能状態を更新するメソッド
 	/// </summary>
-	public void UpdateCutStatus() {
+	public void DecrementCutableLimit() {
 		if (!_isCuttable) {
 			return;
 		}
