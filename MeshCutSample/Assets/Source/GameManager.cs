@@ -63,15 +63,16 @@ public class GameManager : MonoBehaviour {
 	/// </remarks>
 	private void TryCut(Plane cuttingPlane, RaycastHit raycastHit) {
 
-        GameObject target = raycastHit.collider.gameObject;
-        ObjectStatus targetStatus = target.GetComponent<ObjectStatus>();
-        Mesh targetMesh = target.GetComponent<MeshFilter>().mesh;
+		GameObject target = raycastHit.collider.gameObject;
+		ObjectStatus targetStatus = target.GetComponent<ObjectStatus>();
+		Mesh targetMesh = target.GetComponent<MeshFilter>().mesh;
 
-        if (targetMesh != null && targetStatus.IsCuttable()) {
+		if (targetStatus != null && targetMesh != null && targetStatus.IsCuttable()) {
 
-            try {
+			try {
 				ExecuteCutProcess(
-                    cuttingPlane, 
+                    cuttingPlane,
+					raycastHit.point,
 					target,
 					targetStatus,
 					targetMesh
@@ -95,6 +96,7 @@ public class GameManager : MonoBehaviour {
 	/// <param name="targetMesh"> 切断対象のメッシュ </param>
 	private void ExecuteCutProcess(
         Plane cuttingPlane,
+		Vector3 collisionPoint,
 		GameObject targetObject,
 		ObjectStatus targetStatus,
 		Mesh targetMesh
@@ -110,19 +112,19 @@ public class GameManager : MonoBehaviour {
 			out bool hasCutSurfaceMaterial
 		);
 
+		Vector3 localPlaneNormal = targetTransform.InverseTransformDirection(cuttingPlane.normal).normalized;
+		Vector3 localPointOnPlane = targetTransform.InverseTransformPoint(collisionPoint);
+		Plane localCuttingPlane = new Plane(localPlaneNormal, localPointOnPlane);
+
 		(Mesh rightMesh, Mesh leftMesh) = MeshCut.Cut(
+			localCuttingPlane,
 			targetMesh,
-			targetTransform,
-			cuttingPlane,
 			hasCutSurfaceMaterial
 		);
 
 		if (rightMesh == null || leftMesh == null) {
-			Debug.Log("メッシュの計算ができませんでした。");
 			return;
 		}
-
-		Destroy(targetObject);
 
 		// 切断された後のオブジェクトを生成する
 		if (rightMesh != null) {
@@ -145,6 +147,8 @@ public class GameManager : MonoBehaviour {
 				newMaterial
 			);
 		}
+
+		Destroy(targetObject);
 	}
 
 	/// <summary>
@@ -194,6 +198,8 @@ public class GameManager : MonoBehaviour {
 		Material[] newMaterials
 	) {
 
+		Debug.Log("切断後のオブジェクトを生成します: " + prevTransform.name);
+
 		GameObject newObject = _objectPrefab;
 		Vector3 newPosition = prevTransform.position;
 		Vector3 offset = cuttingPlane.normal * prevStatus.CutOffset;
@@ -207,10 +213,24 @@ public class GameManager : MonoBehaviour {
 		newObject.GetComponent<MeshFilter>().mesh = newMesh;
 		newObject.GetComponent<MeshRenderer>().sharedMaterials = newMaterials;
 
+		BoxCollider boxCollider = newObject.GetComponent<BoxCollider>();
+
+		if (boxCollider) {
+			boxCollider.size = newMesh.bounds.size;
+			boxCollider.center = newMesh.bounds.center;
+		}
+
+		SphereCollider sphereCollider = newObject.GetComponent<SphereCollider>();
+		if (sphereCollider) {
+			sphereCollider.radius = Mathf.Max(newMesh.bounds.extents.x, newMesh.bounds.extents.y, newMesh.bounds.extents.z);
+			sphereCollider.center = newMesh.bounds.center;
+		}
+
 		MeshCollider meshCollider = newObject.GetComponent<MeshCollider>();
 
 		if (meshCollider) {
 			meshCollider.sharedMesh = newMesh;
+			meshCollider.convex = true;
 		}
 
 		ObjectStatus newObjectStatus = newObject.GetComponent<ObjectStatus>();
@@ -222,5 +242,7 @@ public class GameManager : MonoBehaviour {
 		newObject.GetComponent<ObjectStatus>().DecrementCutableLimit();
 
 		Instantiate(newObject, newPosition, prevTransform.rotation, null);
+
+		Debug.Log("切断後のオブジェクトを生成しました: " + newObject.name);
 	}
 }

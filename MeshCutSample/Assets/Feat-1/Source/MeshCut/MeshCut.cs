@@ -11,36 +11,26 @@ namespace Feat1.MeshCut {
 		/// <summary>
 		/// 対象のオブジェクトを切断するメソッド
 		/// </summary>
+		/// <param name="localPlane"> ローカル切断平面の情報 </param>
 		/// <param name="targetMesh"> 切断対象のメッシュ情報 </param>
-		/// <param name="targetTransform"> 切断対象の変位情報 </param>
-		/// <param name="cutter"> 切断する平面 </param>
 		/// <param name="hasCutSurfaceMaterial"> <see langword="true"/> なら切断面にマテリアルを追加する </param>
 		/// <returns> 平面の表と裏に切断された後のメッシュ情報 </returns>
 		public static (
 			Mesh frontsideMeshOfPlane,
 			Mesh backsideMeshOfPlane
 		) Cut(
+			Plane localPlane,
 			Mesh targetMesh,
-			Transform targetTransform,
-			Plane cutter,
 			bool hasCutSurfaceMaterial = false
 		) {
 			// 切断平面が平行だと切断できないので、null を返す
-			if (cutter.normal == Vector3.zero) {
+			if (localPlane.normal == Vector3.zero) {
 				Debug.LogError("平面が平行です");
 
 				Mesh empty = new();
 				empty.vertices = new Vector3[] { };
 				return (null, null);
 			}
-
-			// ローカル平面用
-			Vector3 scale = targetTransform.localScale;
-			Vector3 pointOnPlane = cutter.normal * cutter.distance;
-			Vector3 localPlaneNormal = Vector3.Scale(scale, targetTransform.InverseTransformDirection(cutter.normal)).normalized;
-			Vector3 anchor = targetTransform.transform.InverseTransformPoint(pointOnPlane);
-			float localPlaneDistance = Vector3.Dot(localPlaneNormal, anchor);
-			Plane localPlane = new(localPlaneNormal, localPlaneDistance);
 
 			// 切断前オブジェクトのメッシュ情報の整理
 			MeshContainer originMesh = new(targetMesh);
@@ -57,42 +47,6 @@ namespace Feat1.MeshCut {
 
 			// 切断処理が行われるポリゴンが切断された後の、新規ポリゴン情報を格納する
 			SubdivideDataBuffer subdivideDataBuffer = new(localPlane);
-
-
-			// ==== ここからデバッグ用コードを追加 ====
-			// デバッグ用にローカル平面を描画する
-			// デバッグ描画が不要になったらこのブロックをコメントアウトまたは削除してください。
-			GameObject debugPlane = GameObject.CreatePrimitive(PrimitiveType.Quad);
-			// Colliderは不要なので削除
-			Collider debugCollider = debugPlane.GetComponent<Collider>();
-			if (debugCollider != null) {
-				GameObject.Destroy(debugCollider);
-			}
-
-			// 描画する平面のTransformをtargetTransformのローカル空間に合わせる
-			// まず、localPlaneの情報をワールド空間に戻す必要がある
-			// ローカル平面の法線と距離からワールド空間の情報を再構築
-			// ワールド空間での平面上の点 (localPlaneNormal * localPlaneDistance) を、targetTransformのTransformPointでワールド座標に戻す
-			Vector3 worldPointOnLocalPlane = targetTransform.TransformPoint(localPlane.normal * localPlane.distance);
-			// ワールド空間での法線 (localPlaneNormal) を、targetTransformのTransformDirectionでワールド座標に戻す
-			Vector3 worldNormalOfLocalPlane = targetTransform.TransformDirection(localPlane.normal).normalized;
-
-			debugPlane.transform.position = worldPointOnLocalPlane;
-			debugPlane.transform.rotation = Quaternion.LookRotation(worldNormalOfLocalPlane);
-
-			// QuadはデフォルトでXY平面に生成されるため、LookRotationでZ軸が法線方向になります。
-			// Planeの法線は通常上方向（Y）を表すため、適切な向きにするには調整が必要な場合があります。
-			// ここでは、Z軸が法線方向になるようにLookRotationを使用しています。
-
-			// 親子関係を設定して、切断対象オブジェクトと一緒に移動・回転するようにする
-			// debugPlane.transform.SetParent(targetTransform, true); // true: ワールド座標を維持して親子関係を設定
-
-			// デバッグ用マテリアルの設定 (任意)
-			debugPlane.GetComponent<Renderer>().material = new Material(Shader.Find("Custom/FrontBlueBackRedShader"));
-
-			// デバッグオブジェクトの名前を設定
-			debugPlane.name = "DebugCutPlane (Local)";
-			// =================================
 
 			// frontside と backside の各頂点情報配列のインデックスの判定用
 			int IndexCountAssignedFrontside = 0, IndexCountAssignedBackside = 0;
@@ -126,7 +80,7 @@ namespace Feat1.MeshCut {
 
 			// オブジェクトとなりえる最小頂点構成の立体は四面体 (頂点数: 4) なので、切断後のどちらかの頂点数がそれ以下の場合は切断処理を行わない
 			if (IndexCountAssignedFrontside < 4 || IndexCountAssignedBackside < 4) {
-				Debug.LogError($"切断後のメッシュの頂点数が少なすぎるため, 切断処理を行いません. : {IndexCountAssignedFrontside}, {IndexCountAssignedBackside}");
+				Debug.Log($"切断後のメッシュの頂点数が少なすぎるため, 切断処理を行いません. : {IndexCountAssignedFrontside}, {IndexCountAssignedBackside}");
 				return (targetMesh, null);
 			}
 

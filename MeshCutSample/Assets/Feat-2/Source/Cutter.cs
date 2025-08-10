@@ -73,19 +73,22 @@ public class Cutter {
             Ray endRay = mainCamera.ScreenPointToRay(mouseEndPos);
             Vector3 p1 = startRay.GetPoint(planeDistance);
             Vector3 p2 = endRay.GetPoint(planeDistance);
-            Plane cuttingPlane = new Plane(p1, p2, p1 + mainCamera.transform.forward);
 
             Vector3 centerPoint = (p1 + p2) / 2f;
-            planeVisualizer.DrawPlane(cuttingPlane, centerPoint);
 
 			Ray viewDirectionRay = new Ray(centerPoint - mainCamera.transform.forward * 10f, mainCamera.transform.forward);
 
             Debug.DrawRay(centerPoint , mainCamera.transform.forward * 100f, Color.green, 2f);
 
 			RaycastHit raycastHit;
+			Vector3 planeNormal = Vector3.Cross(p2 - p1, mainCamera.transform.forward).normalized;
 
 			if (Physics.Raycast(viewDirectionRay, out raycastHit, 1000f)) {
 				Debug.Log($"Raycast Hit: {raycastHit.collider.name}");
+
+				Plane cuttingPlane = new Plane(planeNormal, raycastHit.point);
+				planeVisualizer.DrawPlane(cuttingPlane, raycastHit.point);
+
 				OnCutReady?.Invoke(cuttingPlane, raycastHit);
 			}
 		}
