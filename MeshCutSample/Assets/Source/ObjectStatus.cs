@@ -17,9 +17,7 @@ public class ObjectStatus : MonoBehaviour {
 	[SerializeField, Range(0.00f, 0.50f), Tooltip("Ø’fŒã‚É‚¸‚ç‚·‹——£ (m)")]
 	public float CutOffset = 0.1f;
 
-	/// <summary>
-	/// Ø’f‰Â”\‰ñ”‚Ì§ŒÀ
-	/// </summary>
+	[SerializeField, Tooltip("Ø’f‰Â”\c‚è‰ñ”")]
 	private int _statusOfCutableLimit = 5;
 
 
