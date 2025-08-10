@@ -75,12 +75,13 @@ public class Cutter {
             Vector3 p2 = endRay.GetPoint(planeDistance);
             Plane cuttingPlane = new Plane(p1, p2, p1 + mainCamera.transform.forward);
 
-            Debug.Log($"Plane Created: Normal = {cuttingPlane.normal}, Distance = {cuttingPlane.distance}");
-
             Vector3 centerPoint = (p1 + p2) / 2f;
             planeVisualizer.DrawPlane(cuttingPlane, centerPoint);
 
-			Ray viewDirectionRay = new Ray(centerPoint, mainCamera.transform.forward);
+			Ray viewDirectionRay = new Ray(centerPoint - mainCamera.transform.forward * 10f, mainCamera.transform.forward);
+
+            Debug.DrawRay(centerPoint , mainCamera.transform.forward * 100f, Color.green, 2f);
+
 			RaycastHit raycastHit;
 
 			if (Physics.Raycast(viewDirectionRay, out raycastHit, 1000f)) {
