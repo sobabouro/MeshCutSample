@@ -11,8 +11,8 @@ GameObject:
   - component: {fileID: 7684694587866150542}
   - component: {fileID: 9097289804059878290}
   - component: {fileID: 6020927548340353485}
-  - component: {fileID: 543072001886554955}
   - component: {fileID: 1823146424088338998}
+  - component: {fileID: 543072001886554955}
   - component: {fileID: 2990977557312795285}
   m_Layer: 0
   m_Name: ObjectTemplate
@@ -86,6 +86,20 @@ MeshRenderer:
   m_SortingLayer: 0
   m_SortingOrder: 0
   m_AdditionalVertexStreams: {fileID: 0}
+--- !u!114 &1823146424088338998
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 5418674888460046952}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5550a7a8a20ef4a4b8f78d3b38f41a2b, type: 3}
+  m_Name: 
+  m_EditorClassIdentifier: 
+  _isGamingObject: 1
+  _isCuttable: 1
 --- !u!65 &543072001886554955
 BoxCollider:
   m_ObjectHideFlags: 0
@@ -107,19 +121,6 @@ BoxCollider:
   serializedVersion: 3
   m_Size: {x: 1, y: 1, z: 1}
   m_Center: {x: 0, y: 0, z: 0}
---- !u!114 &1823146424088338998
-MonoBehaviour:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 5418674888460046952}
-  m_Enabled: 1
-  m_EditorHideFlags: 0
-  m_Script: {fileID: 11500000, guid: 5550a7a8a20ef4a4b8f78d3b38f41a2b, type: 3}
-  m_Name: 
-  m_EditorClassIdentifier: 
-  _isCuttable: 0
 --- !u!54 &2990977557312795285
 Rigidbody:
   m_ObjectHideFlags: 0
