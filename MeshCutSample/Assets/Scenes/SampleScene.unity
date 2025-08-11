@@ -122,33 +122,6 @@ NavMeshSettings:
     debug:
       m_Flags: 0
   m_NavMeshData: {fileID: 0}
---- !u!1 &274457708 stripped
-GameObject:
-  m_CorrespondingSourceObject: {fileID: 5418674888460046952, guid: 7378e75527f062746811dc57d692db78, type: 3}
-  m_PrefabInstance: {fileID: 1408132604}
-  m_PrefabAsset: {fileID: 0}
---- !u!64 &274457715
-MeshCollider:
-  m_ObjectHideFlags: 0
-  m_CorrespondingSourceObject: {fileID: 0}
-  m_PrefabInstance: {fileID: 0}
-  m_PrefabAsset: {fileID: 0}
-  m_GameObject: {fileID: 274457708}
-  m_Material: {fileID: 0}
-  m_IncludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_ExcludeLayers:
-    serializedVersion: 2
-    m_Bits: 0
-  m_LayerOverridePriority: 0
-  m_IsTrigger: 0
-  m_ProvidesContacts: 0
-  m_Enabled: 1
-  serializedVersion: 5
-  m_Convex: 1
-  m_CookingOptions: 30
-  m_Mesh: {fileID: -8931442950774748827, guid: 2ce001a6c70ba6548b85daa160ffb74d, type: 3}
 --- !u!1001 &307994081
 PrefabInstance:
   m_ObjectHideFlags: 0
@@ -157,9 +130,17 @@ PrefabInstance:
     serializedVersion: 3
     m_TransformParent: {fileID: 0}
     m_Modifications:
+    - target: {fileID: 1823146424088338998, guid: 7378e75527f062746811dc57d692db78, type: 3}
+      propertyPath: CutSarfaceMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 61af86adf16f2c84497c307a5bf35f9e, type: 2}
     - target: {fileID: 5418674888460046952, guid: 7378e75527f062746811dc57d692db78, type: 3}
       propertyPath: m_Name
       value: Torus
+      objectReference: {fileID: 0}
+    - target: {fileID: 5418674888460046952, guid: 7378e75527f062746811dc57d692db78, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7684694587866150542, guid: 7378e75527f062746811dc57d692db78, type: 3}
       propertyPath: m_LocalScale.x
@@ -484,16 +465,36 @@ PrefabInstance:
     m_TransformParent: {fileID: 0}
     m_Modifications:
     - target: {fileID: 543072001886554955, guid: 7378e75527f062746811dc57d692db78, type: 3}
+      propertyPath: m_Size.x
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 543072001886554955, guid: 7378e75527f062746811dc57d692db78, type: 3}
+      propertyPath: m_Size.y
+      value: 1.5
+      objectReference: {fileID: 0}
+    - target: {fileID: 543072001886554955, guid: 7378e75527f062746811dc57d692db78, type: 3}
+      propertyPath: m_Size.z
+      value: 3
+      objectReference: {fileID: 0}
+    - target: {fileID: 543072001886554955, guid: 7378e75527f062746811dc57d692db78, type: 3}
       propertyPath: m_Enabled
-      value: 0
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 543072001886554955, guid: 7378e75527f062746811dc57d692db78, type: 3}
       propertyPath: m_ProvidesContacts
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1823146424088338998, guid: 7378e75527f062746811dc57d692db78, type: 3}
+      propertyPath: CutSarfaceMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 61af86adf16f2c84497c307a5bf35f9e, type: 2}
     - target: {fileID: 5418674888460046952, guid: 7378e75527f062746811dc57d692db78, type: 3}
       propertyPath: m_Name
       value: HoleCube
+      objectReference: {fileID: 0}
+    - target: {fileID: 5418674888460046952, guid: 7378e75527f062746811dc57d692db78, type: 3}
+      propertyPath: m_IsActive
+      value: 1
       objectReference: {fileID: 0}
     - target: {fileID: 7684694587866150542, guid: 7378e75527f062746811dc57d692db78, type: 3}
       propertyPath: m_LocalScale.x
@@ -554,10 +555,7 @@ PrefabInstance:
     m_RemovedComponents: []
     m_RemovedGameObjects: []
     m_AddedGameObjects: []
-    m_AddedComponents:
-    - targetCorrespondingSourceObject: {fileID: 5418674888460046952, guid: 7378e75527f062746811dc57d692db78, type: 3}
-      insertIndex: -1
-      addedObject: {fileID: 274457715}
+    m_AddedComponents: []
   m_SourcePrefab: {fileID: 100100000, guid: 7378e75527f062746811dc57d692db78, type: 3}
 --- !u!1 &1725572720 stripped
 GameObject:
@@ -704,9 +702,17 @@ PrefabInstance:
       propertyPath: m_ProvidesContacts
       value: 1
       objectReference: {fileID: 0}
+    - target: {fileID: 1823146424088338998, guid: 7378e75527f062746811dc57d692db78, type: 3}
+      propertyPath: CutSarfaceMaterial
+      value: 
+      objectReference: {fileID: 2100000, guid: 61af86adf16f2c84497c307a5bf35f9e, type: 2}
     - target: {fileID: 5418674888460046952, guid: 7378e75527f062746811dc57d692db78, type: 3}
       propertyPath: m_Name
       value: Cube
+      objectReference: {fileID: 0}
+    - target: {fileID: 5418674888460046952, guid: 7378e75527f062746811dc57d692db78, type: 3}
+      propertyPath: m_IsActive
+      value: 0
       objectReference: {fileID: 0}
     - target: {fileID: 7684694587866150542, guid: 7378e75527f062746811dc57d692db78, type: 3}
       propertyPath: m_LocalScale.x
