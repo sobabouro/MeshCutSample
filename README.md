@@ -1,6 +1,8 @@
 # MeshCutSample
 
-<img src="figs/cut_car.png" align="center" width="50vw">
+<p align="center">
+    <img src="figs/cut_car.png" width="70%">
+</p>
 
 ## Description / 説明
 This Unity project constitutes a prototype implementation of a mesh-slicing algorithm in Unity.
