@@ -102,11 +102,11 @@ namespace Feat1.MeshCut.MeshCutModule {
             }
             _indexBeforeSortY = linkedVertexList.GetAllIndexSortedPlanePositionY();
 
-            for (int i = 0; i < _edgeList.Count; i++) {
-                for (int j = 0; j < _edgeList[i].Count; j++) {
-                    Debug.Log($"Edge[{i}][{j}]: {_edgeList[i][j].Start.VertexType} - {_edgeList[i][j].Start.PlanePosition} ,  {_edgeList[i][j].End.VertexType} - {_edgeList[i][j].End.PlanePosition}");
-                }
-            }
+            //for (int i = 0; i < _edgeList.Count; i++) {
+            //    for (int j = 0; j < _edgeList[i].Count; j++) {
+            //        Debug.Log($"Edge[{i}][{j}]: {_edgeList[i][j].Start.VertexType} - {_edgeList[i][j].Start.PlanePosition} ,  {_edgeList[i][j].End.VertexType} - {_edgeList[i][j].End.PlanePosition}");
+            //    }
+            //}
         }
 
         /// <summary>

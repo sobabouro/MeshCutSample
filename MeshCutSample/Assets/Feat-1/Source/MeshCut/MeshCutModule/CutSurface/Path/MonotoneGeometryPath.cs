@@ -205,36 +205,20 @@ namespace Feat1.MeshCut.MeshCutModule {
             (NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex)[] sortedArray = SortVertexYPosition();
             Stack<(NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex)> stack = new();
 
-            Debug.Log($"sorted array: 頂点数 = {sortedArray.Length}");
-            foreach (var pair in sortedArray) {
-                Debug.Log($"頂点: {pair.Item1.Address}, SideType: {pair.Item1.SideType}");
-            }
-
             stack.Push(sortedArray[0]);
             stack.Push(sortedArray[1]);
 
             for (int i = 2; i < sortedArray.Length; i++) {
-
-                Debug.Log($"処理頂点: {sortedArray[i].Item1.Address}, SideType: {sortedArray[i].Item1.SideType}");
-
-                foreach (var pair in stack) {
-                    Debug.Log($"現在のスタック: {pair.Item1.Address}, SideType: {pair.Item1.SideType}");
-                }
 
                 SideType topSideType = stack.Peek().Item1.SideType;
 
                 // スタックの一番上の頂点と現在の頂点が異なる境界に属している場合
                 if (topSideType != sortedArray[i].Item1.SideType) {
 
-                    Debug.Log("異なる境界");
-
                     while (stack.Count >= 2) {
 
                         var pair1 = stack.Pop();
                         var pair2 = stack.Count >= 2 ? stack.Peek() : stack.Pop();
-
-                        Debug.Log($"トライアングル構築: v_i[{sortedArray[i].Item1.SideType}], p1[{pair1.Item1.SideType}], p2[{pair2.Item1.SideType}] (異なる境界)");
-                        Debug.Log($"< {sortedArray[i].Item1.Address}, {pair1.Item1.Address}, {pair2.Item1.Address} >");
 
                         CreateTriangle(
                             (pair1.Item1, pair2.Item1, sortedArray[i].Item1),
@@ -247,24 +231,15 @@ namespace Feat1.MeshCut.MeshCutModule {
                     }
                     stack.Push(sortedArray[i - 1]);
 
-                    Debug.Log($"push: {sortedArray[i - 1].Item1.Address}");
-
                     stack.Push(sortedArray[i]);
-
-                    Debug.Log($"push: {sortedArray[i].Item1.Address}");
                 }
                 // スタックの一番上の頂点と現在の頂点が同じ境界に属している場合
                 else {
-
-                    Debug.Log("同じ境界");
 
                     bool isProcessPermission = false;
                     (NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex) prevLastPair = default;
 
                     while (stack.Count >= 2) {
-
-                        if (stack.Count == 2)
-                            Debug.Log("同じ境界での最後のループ");
 
                         var pair1 = prevLastPair = stack.Pop();
                         var pair2 = stack.Pop();
@@ -277,13 +252,8 @@ namespace Feat1.MeshCut.MeshCutModule {
 
                             stack.Push(pair2);
 
-                            Debug.Log("条件を満たさないため終了");
-
                             break;
                         }
-
-                        Debug.Log($"トライアングル構築: v_i[{sortedArray[i].Item1.SideType}], p1[{pair1.Item1.SideType}], p2[{pair2.Item1.SideType}] (同じ境界)");
-                        Debug.Log($"< {sortedArray[i].Item1.Address}, {pair1.Item1.Address}, {pair2.Item1.Address} >");
 
                         CreateTriangle(
                             (pair1.Item1, pair2.Item1, sortedArray[i].Item1),
@@ -298,14 +268,10 @@ namespace Feat1.MeshCut.MeshCutModule {
 
                     if (isProcessPermission) {
                         stack.Push(sortedArray[i]);
-
-                        Debug.Log($"push: {sortedArray[i].Item1.Address}");
                     }
                     else {
                         stack.Push(prevLastPair);
-                        Debug.Log($"push: {prevLastPair.Item1.Address}");
                         stack.Push(sortedArray[i]);
-                        Debug.Log($"push: {sortedArray[i].Item1.Address}");
                     }
                 }
             }
