@@ -13,7 +13,7 @@ namespace Feat1.MeshCut {
 		/// </summary>
 		/// <param name="localPlane"> ローカル切断平面の情報 </param>
 		/// <param name="targetMesh"> 切断対象のメッシュ情報 </param>
-		/// <param name="hasCutSurfaceMaterial"> <see langword="true"/> なら切断面にマテリアルを追加する </param>
+		/// <param name="hasNewCutSurfaceMaterial"> <see langword="true"/> なら切断面にマテリアルを追加する </param>
 		/// <returns> 平面の表と裏に切断された後のメッシュ情報 </returns>
 		public static (
 			Mesh frontsideMeshOfPlane,
@@ -21,7 +21,7 @@ namespace Feat1.MeshCut {
 		) Cut(
 			Plane localPlane,
 			Mesh targetMesh,
-			bool hasCutSurfaceMaterial = false
+			bool hasNewCutSurfaceMaterial = false
 		) {
 
 			// 切断平面が平行だと切断できないので、null を返す
@@ -143,7 +143,7 @@ namespace Feat1.MeshCut {
 				originMesh,
 				frontsideMesh,
 				backsideMesh,
-				hasCutSurfaceMaterial
+				hasNewCutSurfaceMaterial
 			);
 			// ここで、切断面に対する処理を行う
 

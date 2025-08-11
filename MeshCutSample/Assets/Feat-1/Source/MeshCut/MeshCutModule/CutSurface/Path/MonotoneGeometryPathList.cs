@@ -187,12 +187,12 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// 切断平面上の y 単調な多角形のパスからポリゴンを生成するメソッド
         /// </summary>
         /// <param name="localPlane"> ローカル座標系の切断平面 </param>
-        /// <param name="hasCutSurfaceMaterial"> 切断面に新規マテリアルを割り当てるかどうか </param>
+        /// <param name="hasNewCutSurfaceMaterial"> 切断面に新規マテリアルを割り当てるかどうか </param>
         /// <param name="frontsideMesh"> 切断後の法線側メッシュ </param>
         /// <param name="backsideMesh"> 切断後の反法線側メッシュ </param>
         public void MakePolygon(
             Plane localPlane,
-            bool hasCutSurfaceMaterial,
+            bool hasNewCutSurfaceMaterial,
             MeshContainer frontsideMesh,
             MeshContainer backsideMesh
         ) {
@@ -203,7 +203,7 @@ namespace Feat1.MeshCut.MeshCutModule {
                 path.MakePolygon(
                     _boundingBox,
                     localPlane,
-                    hasCutSurfaceMaterial,
+                    hasNewCutSurfaceMaterial,
                     frontsideMesh,
                     backsideMesh
                 );

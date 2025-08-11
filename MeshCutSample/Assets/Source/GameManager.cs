@@ -122,7 +122,7 @@ public class GameManager : MonoBehaviour {
 		newMaterial = GanerateMaterial(
 			baseMaterials,
 			targetStatus.CutSarfaceMaterial,
-			out bool hasCutSurfaceMaterial
+			out bool hasNewCutSurfaceMaterial
 		);
 
 		Vector3 localPlaneNormal = targetTransform.InverseTransformDirection(cuttingPlane.normal).normalized;
@@ -132,7 +132,7 @@ public class GameManager : MonoBehaviour {
 		(Mesh rightMesh, Mesh leftMesh) = MeshCut.Cut(
 			localCuttingPlane,
 			targetMesh,
-			hasCutSurfaceMaterial
+			hasNewCutSurfaceMaterial
 		);
 
 		if (rightMesh == null || leftMesh == null) {
@@ -171,17 +171,17 @@ public class GameManager : MonoBehaviour {
 	/// <param name="baseMaterials"> 切断前のオブジェクトのマテリアル配列 </param>
 	/// <param name="cutSurfaceMaterial"> 切断面に割り当てるマテリアル </param>
 	/// <returns> 新マテリアル配列 </returns>
-	private Material[] GanerateMaterial(Material[] baseMaterials, Material cutSurfaceMaterial, out bool hasCutSurfaceMaterial) {
+	private Material[] GanerateMaterial(Material[] baseMaterials, Material cutSurfaceMaterial, out bool hasNewCutSurfaceMaterial) {
 
-		hasCutSurfaceMaterial = false;
+		hasNewCutSurfaceMaterial = false;
 		Material[] newMaterials;
 
         // 一度 CallCut() で切断し、新規マテリアル割り当て済みのオブジェクトにも対応できるようにする
         if (cutSurfaceMaterial != null)
             if (baseMaterials[baseMaterials.Length - 1].name != cutSurfaceMaterial.name)
-                hasCutSurfaceMaterial = true;
+                hasNewCutSurfaceMaterial = true;
 
-        if (hasCutSurfaceMaterial) {
+        if (hasNewCutSurfaceMaterial) {
 
             newMaterials = new Material[baseMaterials.Length + 1];
 			baseMaterials.CopyTo(newMaterials, 0);

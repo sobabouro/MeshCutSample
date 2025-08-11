@@ -145,22 +145,22 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// </summary>
         /// <param name="publicBoundingBox"> 切断平面上のすべての図形を包括するバウンディングボックス </param>
         /// <param name="localPlane"> 切断平面 </param>
-        /// <param name="hasCutSurfaceMaterial"> 断面のマテリアルを所持するかどうか </param>
+        /// <param name="hasNewCutSurfaceMaterial"> 断面のマテリアルを所持するかどうか </param>
         /// <param name="frontsideMesh"> 法線側の切断後メッシュコンテナ </param>
         /// <param name="backsideMesh"> 反法線側の切断後メッシュコンテナ </param>
         public void MakePolygon(
             BoundingBox publicBoundingBox,
             Plane localPlane,
-            bool hasCutSurfaceMaterial,
+            bool hasNewCutSurfaceMaterial,
             MeshContainer frontsideMesh,
             MeshContainer backsideMesh
         ) {
 
 			if (_path.Count <= 4) {
-                SinpleMakePolygon(publicBoundingBox, localPlane, hasCutSurfaceMaterial, frontsideMesh, backsideMesh);
+                SinpleMakePolygon(publicBoundingBox, localPlane, hasNewCutSurfaceMaterial, frontsideMesh, backsideMesh);
             }
             else {
-                MultipleMakePolygon(publicBoundingBox, localPlane, hasCutSurfaceMaterial, frontsideMesh, backsideMesh);
+                MultipleMakePolygon(publicBoundingBox, localPlane, hasNewCutSurfaceMaterial, frontsideMesh, backsideMesh);
             }
         }
 
@@ -170,13 +170,13 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// </summary>
         /// <param name="publicBoundingBox"> 切断平面上のすべての図形を包括するバウンディングボックス </param>
         /// <param name="localPlane"> 切断平面 </param>
-        /// <param name="hasCutSurfaceMaterial"> 断面のマテリアルを所持するかどうか </param>
+        /// <param name="hasNewCutSurfaceMaterial"> 断面のマテリアルを所持するかどうか </param>
         /// <param name="frontsideMesh"> 法線側の切断後メッシュコンテナ </param>
         /// <param name="backsideMesh"> 反法線側の切断後メッシュコンテナ </param>
         private void MultipleMakePolygon(
             BoundingBox publicBoundingBox,
             Plane localPlane,
-            bool hasCutSurfaceMaterial,
+            bool hasNewCutSurfaceMaterial,
             MeshContainer frontsideMesh,
             MeshContainer backsideMesh
         ) {
@@ -227,7 +227,7 @@ namespace Feat1.MeshCut.MeshCutModule {
                             localPlane,
                             frontsideMesh,
                             backsideMesh,
-                            hasCutSurfaceMaterial
+                            hasNewCutSurfaceMaterial
                         );
                     }
                     stack.Push(sortedArray[i - 1]);
@@ -262,7 +262,7 @@ namespace Feat1.MeshCut.MeshCutModule {
                             localPlane,
                             frontsideMesh,
                             backsideMesh,
-                            hasCutSurfaceMaterial
+                            hasNewCutSurfaceMaterial
                         );
                         stack.Push(pair2);
                     }
@@ -284,7 +284,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// </summary>
         /// <param name="publicBoundingBox"> 切断平面上のすべての図形を包括するバウンディングボックス </param>
         /// <param name="localPlane"> 切断平面 </param>
-        /// <param name="hasCutSurfaceMaterial"> 断面のマテリアルを所持するかどうか </param>
+        /// <param name="hasNewCutSurfaceMaterial"> 断面のマテリアルを所持するかどうか </param>
         /// <param name="frontsideMesh"> 法線側の切断後メッシュコンテナ </param>
         /// <param name="backsideMesh"> 反法線側の切断後メッシュコンテナ </param>
         /// <remarks>
@@ -294,7 +294,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         private void SinpleMakePolygon(
             BoundingBox publicBoundingBox,
             Plane localPlane,
-            bool hasCutSurfaceMaterial,
+            bool hasNewCutSurfaceMaterial,
             MeshContainer frontsideMesh,
             MeshContainer backsideMesh
         ) {
@@ -316,7 +316,7 @@ namespace Feat1.MeshCut.MeshCutModule {
                     localPlane,
                     frontsideMesh,
                     backsideMesh,
-                    hasCutSurfaceMaterial
+                    hasNewCutSurfaceMaterial
                 );
                 return;
             }
@@ -333,7 +333,7 @@ namespace Feat1.MeshCut.MeshCutModule {
                     localPlane,
                     frontsideMesh,
                     backsideMesh,
-                    hasCutSurfaceMaterial
+                    hasNewCutSurfaceMaterial
                 );
                 CreateTriangle(
                     (firstVertex, thirdVertex, fourthVertex),
@@ -341,7 +341,7 @@ namespace Feat1.MeshCut.MeshCutModule {
                     localPlane,
                     frontsideMesh,
                     backsideMesh,
-                    hasCutSurfaceMaterial
+                    hasNewCutSurfaceMaterial
                 );
                 return;
             }
@@ -426,14 +426,14 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// <param name="localPlane"> 切断平面 </param>
         /// <param name="frontsideMesh"> 法線側メッシュ </param>
         /// <param name="backsideMesh"> 反法線側メッシュ </param>
-        /// <param name="hasCutSurfaceMaterial"></param>
+        /// <param name="hasNewCutSurfaceMaterial"></param>
         private void CreateTriangle(
             (NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex) triangle,
             BoundingBox boundingBox,
             Plane localPlane,
             MeshContainer frontsideMesh,
             MeshContainer backsideMesh,
-            bool hasCutSurfaceMaterial = false
+            bool hasNewCutSurfaceMaterial = false
         ) {
             Vector3 triangleNormal = Vector3.Cross(
                 triangle.Item2.LocalPosition - triangle.Item1.LocalPosition,
@@ -457,11 +457,7 @@ namespace Feat1.MeshCut.MeshCutModule {
                 (triangle.Item3.PlanePosition.y - boundingBox.MinY) / boundingBox.Height
             );
 
-            int materialIndex = 0;
-
-            if (hasCutSurfaceMaterial) {
-				materialIndex = frontsideMesh.SubmeshCount - 1;
-			}
+            int materialIndex = frontsideMesh.SubmeshCount - 1;
 
 			frontsideMesh.AddMesh(
                 materialIndex,

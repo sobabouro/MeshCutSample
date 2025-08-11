@@ -58,11 +58,11 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// </summary>
         /// <param name="frontsideMesh"> 切断後の法線側メッシュコンテナ </param>
         /// <param name="backsideMesh"> 切断後の反法線側メッシュコンテナ </param>
-        /// <param name="hasCutSurfaceMaterial"> 切断平面用のマテリアルの有無 </param>
+        /// <param name="hasNewCutSurfaceMaterial"> 切断平面用のマテリアルの有無 </param>
         public void MakeCutSurfacePolygon(
             MeshContainer frontsideMesh,
             MeshContainer backsideMesh,
-            bool hasCutSurfaceMaterial = false
+            bool hasNewCutSurfaceMaterial = false
         ) {
             if (_linkedVertexList.Count == 0) {
                 Debug.LogWarning("CutSurfacePolygonBuffer: No vertices to process.");
@@ -76,7 +76,7 @@ namespace Feat1.MeshCut.MeshCutModule {
             _monotoneGeometryPathList = new MonotoneGeometryPathList(_linkedVertexList, diagonalSet);
             _monotoneGeometryPathList.MakePolygon(
                 _localPlane,
-                hasCutSurfaceMaterial,
+                hasNewCutSurfaceMaterial,
                 frontsideMesh,
                 backsideMesh
             );

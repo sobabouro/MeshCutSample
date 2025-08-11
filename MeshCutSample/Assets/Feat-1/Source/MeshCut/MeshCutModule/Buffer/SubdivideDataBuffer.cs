@@ -59,13 +59,13 @@ namespace Feat1.MeshCut.MeshCutModule {
 		/// <param name="originMesh"> 切断前のメッシュコンテナ </param>
 		/// <param name="frontsideMesh"> 切断後の法線側メッシュコンテナ </param>
 		/// <param name="backsideMesh"> 切断後の反法線側のメッシュコンテナ </param>
-		/// <param name="hasCutSurfaceMaterial"> 新規マテリアルがあるかどうか </param>
+		/// <param name="hasNewCutSurfaceMaterial"> 新規マテリアルがあるかどうか </param>
 		public void MakeAllPolygon(
             int[] trackerArray,
             MeshContainer originMesh,
             MeshContainer frontsideMesh,
             MeshContainer backsideMesh,
-            bool hasCutSurfaceMaterial = false
+            bool hasNewCutSurfaceMaterial = false
         ) {
             _polygonBuffer.MakeBaseSurfacePolygon(
                 trackerArray,
@@ -76,7 +76,7 @@ namespace Feat1.MeshCut.MeshCutModule {
             );
 
             // 新規マテリアルがある場合、新規マテリアル用のサブメッシュ配列を追加する
-            if (hasCutSurfaceMaterial) {
+            if (hasNewCutSurfaceMaterial) {
                 frontsideMesh.AddNewSubmesh();
 				backsideMesh.AddNewSubmesh();
 			}
@@ -84,7 +84,7 @@ namespace Feat1.MeshCut.MeshCutModule {
             _cutSurfacePolygonBuffer.MakeCutSurfacePolygon(
                 frontsideMesh,
                 backsideMesh,
-                hasCutSurfaceMaterial
+                hasNewCutSurfaceMaterial
             );
         }
     }
