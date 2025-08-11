@@ -1,5 +1,7 @@
 # MeshCutSample
 
+<img src="figs/cut_car.png" align="center" width="50vw">
+
 ## Description / 説明
 This Unity project constitutes a prototype implementation of a mesh-slicing algorithm in Unity.
 The algorithm is capable of partitioning three-dimensional objects—either non-convex or possessing holes with a genus of zero or greater—into two distinct three-dimensional objects by means of a cutter.
