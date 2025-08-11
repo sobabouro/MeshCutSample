@@ -63,7 +63,16 @@ public class GameManager : MonoBehaviour {
 	/// </remarks>
 	private void TryCut(Plane cuttingPlane, RaycastHit raycastHit) {
 
+		if (raycastHit.collider == null || raycastHit.collider.gameObject == null) {
+			return;
+		}
+
 		GameObject target = raycastHit.collider.gameObject;
+
+		if (target == null) {
+			return;
+		}
+
 		ObjectStatus targetStatus = target.GetComponent<ObjectStatus>();
 		Mesh targetMesh = target.GetComponent<MeshFilter>().mesh;
 
@@ -198,18 +207,17 @@ public class GameManager : MonoBehaviour {
 		Material[] newMaterials
 	) {
 
-		Debug.Log("切断後のオブジェクトを生成します: " + prevTransform.name);
+		GameObject newObject = Instantiate(_objectPrefab, prevTransform.position, prevTransform.rotation);
 
-		GameObject newObject = _objectPrefab;
-		Vector3 newPosition = prevTransform.position;
 		Vector3 offset = cuttingPlane.normal * prevStatus.CutOffset;
 
 		if (sideOfCuttingPlaneNormal)
-			newPosition += offset;
+			newObject.transform.position += offset;
 		else
-			newPosition -= offset;
+			newObject.transform.position -= offset;
 
 		newObject.transform.localScale = prevTransform.localScale;
+
 		newObject.GetComponent<MeshFilter>().mesh = newMesh;
 		newObject.GetComponent<MeshRenderer>().sharedMaterials = newMaterials;
 
@@ -240,9 +248,5 @@ public class GameManager : MonoBehaviour {
 		}
 
 		newObject.GetComponent<ObjectStatus>().DecrementCutableLimit();
-
-		Instantiate(newObject, newPosition, prevTransform.rotation, null);
-
-		Debug.Log("切断後のオブジェクトを生成しました: " + newObject.name);
 	}
 }
