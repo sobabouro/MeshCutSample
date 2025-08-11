@@ -59,23 +59,25 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// <param name="y"> 更新する y 座標 </param>
         /// <returns> 更新されれば true, そうでなければ false </returns>
         public bool TryUpdate(float x, float y) {
-            if (x < MinX) {
+            bool isUpdated = false;
+
+			if (x < MinX) {
                 MinX = x;
-                return true;
-            }
-            else if (x > MaxX) {
+				isUpdated = true;
+			}
+            if (x > MaxX) {
                 MaxX = x;
-                return true;
-            }
-            else if (y < MinY) {
+				isUpdated = true;
+			}
+            if (y < MinY) {
                 MinY = y;
-                return true;
-            }
-            else if (y > MaxY) {
+				isUpdated = true;
+			}
+            if (y > MaxY) {
                 MaxY = y;
-                return true;
+                isUpdated = true;
             }
-            return false;
+            return isUpdated;
         }
     }
 }
