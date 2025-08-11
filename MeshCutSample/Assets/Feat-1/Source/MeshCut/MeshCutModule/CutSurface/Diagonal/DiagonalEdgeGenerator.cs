@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Linq;
 using UnityEngine;
 
 namespace Feat1.MeshCut.MeshCutModule {
@@ -102,11 +103,11 @@ namespace Feat1.MeshCut.MeshCutModule {
             }
             _indexBeforeSortY = linkedVertexList.GetAllIndexSortedPlanePositionY();
 
-            //for (int i = 0; i < _edgeList.Count; i++) {
-            //    for (int j = 0; j < _edgeList[i].Count; j++) {
-            //        Debug.Log($"Edge[{i}][{j}]: {_edgeList[i][j].Start.VertexType} - {_edgeList[i][j].Start.PlanePosition} ,  {_edgeList[i][j].End.VertexType} - {_edgeList[i][j].End.PlanePosition}");
-            //    }
-            //}
+            for (int i = 0; i < _edgeList.Count; i++) {
+                for (int j = 0; j < _edgeList[i].Count; j++) {
+                    Debug.Log($"Edge[{i}][{j}]: {_edgeList[i][j].Start.VertexType} - {_edgeList[i][j].Start.PlanePosition} ,  {_edgeList[i][j].End.VertexType} - {_edgeList[i][j].End.PlanePosition}");
+                }
+            }
         }
 
         /// <summary>
@@ -119,47 +120,71 @@ namespace Feat1.MeshCut.MeshCutModule {
 
             for (int i = 0; i < _indexBeforeSortY.Length; i++) {
 
-                var currVertex = _edgeList[_indexBeforeSortY[i].Item1][_indexBeforeSortY[i].Item2].Start;
+                try {
 
-                /*デバッグ用*/
-                currVertex.Address = $"v[{_indexBeforeSortY[i].Item1}, {_indexBeforeSortY[i].Item2}]";
+                    int geometryGroup = _indexBeforeSortY[i].Item1;
+                    int vertexIndexOfGeometry = _indexBeforeSortY[i].Item2;
 
-                var currEdge = _edgeList[_indexBeforeSortY[i].Item1][_indexBeforeSortY[i].Item2];
+					var currVertex = _edgeList[geometryGroup][vertexIndexOfGeometry].Start;
 
-                /*デバッグ用*/
-                currEdge.Address = $"e[{_indexBeforeSortY[i].Item1}, {_indexBeforeSortY[i].Item2}]";
+                    if (currVertex == null) {
+                        Debug.LogError($"currVertex is null at index {i}.");
+					}
 
-                var prevEdge = _indexBeforeSortY[i].Item2 > 0
-                    ? _edgeList[_indexBeforeSortY[i].Item1][_indexBeforeSortY[i].Item2 - 1]
-                    : _edgeList[_indexBeforeSortY[i].Item1][_edgeList[_indexBeforeSortY[i].Item1].Count - 1];
+                    /*デバッグ用*/
+                    currVertex.Address = $"v[{geometryGroup}, {vertexIndexOfGeometry}]";
 
-                // 走査線の y 座標を設定する
-                EdgeComparer.HorizonY = currVertex.PlanePosition.y;
-                // 走査対象の頂点に接続する辺を取得する
-                var activeEdges = _edgeIntervalTree.GetEdgesPassThroughHorizon(currVertex.PlanePosition.y);
+                    Debug.Log($"Processing vertex: {currVertex.Address} - Type: {currVertex.VertexType}");
 
-                foreach (var edge in activeEdges) {
-                    _sortedXPositionEdgeInTree.Add(edge, edge);
-                }
+					var currEdge = _edgeList[geometryGroup][vertexIndexOfGeometry];
 
-                switch (currVertex.VertexType) {
-                    case VertexType.Start:
-                        HandleStartVertex(currVertex, currEdge);
-                        break;
-                    case VertexType.Split:
-                        HandleSplitVertex(currVertex, currEdge);
-                        break;
-                    case VertexType.Regular:
-                        HandleRegularVertex(currVertex, currEdge, prevEdge);
-                        break;
-                    case VertexType.Merge:
-                        HandleMergeVertex(currVertex, prevEdge);
-                        break;
-                    case VertexType.End:
-                        HandleEndVertex(currVertex, prevEdge);
-                        break;
-                }
-                _sortedXPositionEdgeInTree.Clear();
+                    if (currEdge == null) {
+						Debug.LogError($"currEdge is null at index {i}.");
+					}
+
+                    /*デバッグ用*/
+                    currEdge.Address = $"e[{geometryGroup}, {vertexIndexOfGeometry}]";
+
+                    var prevEdge = vertexIndexOfGeometry > 0
+						? _edgeList[geometryGroup][vertexIndexOfGeometry - 1]
+						: _edgeList[geometryGroup][_edgeList[geometryGroup].Count - 1];
+
+                    if (prevEdge == null) {
+						Debug.LogError($"prevEdge is null at index {i}.");
+					}
+
+					// 走査線の y 座標を設定する
+					EdgeComparer.HorizonY = currVertex.PlanePosition.y;
+					// 走査対象の頂点に接続する辺を取得する
+					var activeEdges = _edgeIntervalTree.GetEdgesPassThroughHorizon(currVertex.PlanePosition.y);
+
+					foreach (var edge in activeEdges) {
+						if (!_sortedXPositionEdgeInTree.ContainsKey(edge))
+							_sortedXPositionEdgeInTree.Add(edge, edge);
+					}
+
+					switch (currVertex.VertexType) {
+						case VertexType.Start:
+							HandleStartVertex(currVertex, currEdge);
+							break;
+						case VertexType.Split:
+							HandleSplitVertex(geometryGroup, currVertex, currEdge);
+							break;
+						case VertexType.Regular:
+							HandleRegularVertex(geometryGroup, currVertex, currEdge, prevEdge);
+							break;
+						case VertexType.Merge:
+							HandleMergeVertex(geometryGroup, currVertex, prevEdge);
+							break;
+						case VertexType.End:
+							HandleEndVertex(geometryGroup, currVertex, prevEdge);
+							break;
+					}
+					_sortedXPositionEdgeInTree.Clear();
+				}
+				catch (Exception e) {
+					Debug.LogError($"catch: {e.Message}");
+				}
             }
         }
 
@@ -177,15 +202,19 @@ namespace Feat1.MeshCut.MeshCutModule {
              */
             _edgeIntervalTree.AddEdge(currEdge);
             currEdge.Helper = currVertex;
-        }
 
-        /// <summary>
-        /// イベントポイントが分離点 (Split) の場合の処理メソッド
-        /// </summary>
-        /// <param name="currVertex"> v[i] </param>
-        /// <param name="currEdge"> e[i] </param>
-        private void HandleSplitVertex(
-            NonConvexMonotoneCutSurfaceVertex currVertex,
+            Debug.Log($"Start(): set helper e{currEdge.Helper.Address} to {currEdge.Start.Address}.");
+		}
+
+		/// <summary>
+		/// イベントポイントが分離点 (Split) の場合の処理メソッド
+		/// </summary>
+		/// <param name="geometryGroup"> 図形のグループ番号 </param>
+		/// <param name="currVertex"> v[i] </param>
+		/// <param name="currEdge"> e[i] </param>
+		private void HandleSplitVertex(
+			int geometryGroup,
+			NonConvexMonotoneCutSurfaceVertex currVertex,
             NonConvexMonotoneCutSurfaceEdge currEdge
         ) {
             /**
@@ -196,21 +225,30 @@ namespace Feat1.MeshCut.MeshCutModule {
              */
             var mostLeftNeighboringEdge = GetEdgeMostLeftNeighboringFromVertex(currVertex);
 
-            AddDiagonalEdge(currVertex, mostLeftNeighboringEdge.Helper);
+            Debug.Log($"Split(): most left e{mostLeftNeighboringEdge?.Start.Address}");
+
+			AddDiagonalEdge(geometryGroup, currVertex, mostLeftNeighboringEdge.Helper);
+
             mostLeftNeighboringEdge.Helper = currVertex;
 
-            _edgeIntervalTree.AddEdge(currEdge);
-            currEdge.Helper = currVertex;
-        }
+            Debug.Log($"Spilit(): set helper e{mostLeftNeighboringEdge.Start.Address} to {mostLeftNeighboringEdge.Helper.Address}");
 
-        /// <summary>
-        /// イベントポイントが通常点 (Regular) の場合の処理メソッド
-        /// </summary>
-        /// <param name="currVertex"> v[i] </param>
-        /// <param name="currEdge"> e[i] </param>
-        /// <param name="prevEdge"> e[i-1] </param>
-        private void HandleRegularVertex(
-            NonConvexMonotoneCutSurfaceVertex currVertex,
+			_edgeIntervalTree.AddEdge(currEdge);
+            currEdge.Helper = currVertex;
+
+			Debug.Log($"Split(): set helper e{currEdge.Helper.Address} to {currEdge.Start.Address}.");
+		}
+
+		/// <summary>
+		/// イベントポイントが通常点 (Regular) の場合の処理メソッド
+		/// </summary>
+		/// <param name="geometryGroup"> 図形のグループ番号 </param>
+		/// <param name="currVertex"> v[i] </param>
+		/// <param name="currEdge"> e[i] </param>
+		/// <param name="prevEdge"> e[i-1] </param>
+		private void HandleRegularVertex(
+			int geometryGroup,
+			NonConvexMonotoneCutSurfaceVertex currVertex,
             NonConvexMonotoneCutSurfaceEdge currEdge,
             NonConvexMonotoneCutSurfaceEdge prevEdge
         ) {
@@ -231,7 +269,9 @@ namespace Feat1.MeshCut.MeshCutModule {
 
             if (prevEdge.Helper?.VertexType == VertexType.Merge) {
 
-                AddDiagonalEdge(currVertex, prevEdge.Helper);
+                Debug.Log($"Regular(): prevEdge.Helper is Merge: {prevEdge.Helper.Address}");
+
+				AddDiagonalEdge(geometryGroup, currVertex, prevEdge.Helper);
                 _edgeIntervalTree.RemoveEdge(prevEdge);
                 _edgeIntervalTree.AddEdge(currEdge);
                 currEdge.Helper = currVertex;
@@ -240,23 +280,41 @@ namespace Feat1.MeshCut.MeshCutModule {
 
                 var mostLeftNeighboringEdge = GetEdgeMostLeftNeighboringFromVertex(currVertex);
 
-                if (mostLeftNeighboringEdge == null)
-                    return;
+                Debug.Log($"Regular(): most left e{mostLeftNeighboringEdge?.Start.Address}");
 
-                if (mostLeftNeighboringEdge.Helper?.VertexType == VertexType.Merge) {
-                    AddDiagonalEdge(currVertex, mostLeftNeighboringEdge.Helper);
+				if (mostLeftNeighboringEdge == null) {
+					currEdge.Helper = currVertex;
+
+                    Debug.Log($"Regular(): no most left. set helper e{currEdge.Start.Address} to {currEdge.Helper.Address}.");
+
+					return;
+				}
+
+				if (mostLeftNeighboringEdge.Helper?.VertexType == VertexType.Merge) {
+
+                    Debug.Log($"Regular(): most left helper is Merge: {mostLeftNeighboringEdge.Helper.Address}");
+
+					AddDiagonalEdge(geometryGroup, currVertex, mostLeftNeighboringEdge.Helper);
                 }
-                mostLeftNeighboringEdge.Helper = currVertex;
-            }
+                currEdge.Helper = currVertex;
+
+                Debug.Log($"Regular(): set helper e{currEdge.Start.Address} to {currEdge.Helper.Address}.");
+
+				mostLeftNeighboringEdge.Helper = currVertex;
+
+                Debug.Log($"Regular(): set helper e{mostLeftNeighboringEdge.Start.Address} to {mostLeftNeighboringEdge.Helper.Address}.");
+			}
         }
 
-        /// <summary>
-        /// イベントポイントが統合点 (Merge) の場合の処理メソッド
-        /// </summary>
-        /// <param name="currVertex"> v[i] </param>
-        /// <param name="prevEdge"> e[i-1] </param>
-        private void HandleMergeVertex(
-            NonConvexMonotoneCutSurfaceVertex currVertex,
+		/// <summary>
+		/// イベントポイントが統合点 (Merge) の場合の処理メソッド
+		/// </summary>
+		/// <param name="geometryGroup"> 図形のグループ番号 </param>
+		/// <param name="currVertex"> v[i] </param>
+		/// <param name="prevEdge"> e[i-1] </param>
+		private void HandleMergeVertex(
+			int geometryGroup,
+			NonConvexMonotoneCutSurfaceVertex currVertex,
             NonConvexMonotoneCutSurfaceEdge prevEdge
         ) {
             /**
@@ -269,24 +327,37 @@ namespace Feat1.MeshCut.MeshCutModule {
              * helper(e[j]) を v[i] にする
              */
             if (prevEdge.Helper?.VertexType == VertexType.Merge)
-                AddDiagonalEdge(currVertex, prevEdge.Helper);
+
+                Debug.Log($"Merge(): prevEdge.Helper is Merge: {prevEdge.Helper.Address}");
+
+			AddDiagonalEdge(geometryGroup, currVertex, prevEdge.Helper);
 
             _edgeIntervalTree.RemoveEdge(prevEdge);
             var mostLeftNeighboringEdge = GetEdgeMostLeftNeighboringFromVertex(currVertex);
 
-            if (mostLeftNeighboringEdge.Helper?.VertexType == VertexType.Merge)
-                AddDiagonalEdge(currVertex, mostLeftNeighboringEdge.Helper);
+            Debug.Log($"Merge(): most left e{mostLeftNeighboringEdge?.Start.Address}");
+
+            if (mostLeftNeighboringEdge.Helper?.VertexType == VertexType.Merge) {
+
+                Debug.Log($"Merge(): most left helper is Merge: e{mostLeftNeighboringEdge.Helper.Address}");
+
+				AddDiagonalEdge(geometryGroup, currVertex, mostLeftNeighboringEdge.Helper);
+			}
 
             mostLeftNeighboringEdge.Helper = currVertex;
-        }
 
-        /// <summary>
-        /// イベントポイントが終了点 (End) の場合の処理メソッド
-        /// </summary>
-        /// <param name="currVertex"> v[i] </param>
-        /// <param name="prevEdge"> e[i-1] </param>
-        private void HandleEndVertex(
-            NonConvexMonotoneCutSurfaceVertex currVertex,
+            Debug.Log($"Merge(): set helper e{mostLeftNeighboringEdge.Start.Address} to {mostLeftNeighboringEdge.Helper.Address}.");
+		}
+
+		/// <summary>
+		/// イベントポイントが終了点 (End) の場合の処理メソッド
+		/// </summary>
+		/// <param name="geometryGroup"> 図形のグループ番号 </param>
+		/// <param name="currVertex"> v[i] </param>
+		/// <param name="prevEdge"> e[i-1] </param>
+		private void HandleEndVertex(
+            int geometryGroup,
+			NonConvexMonotoneCutSurfaceVertex currVertex,
             NonConvexMonotoneCutSurfaceEdge prevEdge
         ) {
             /**
@@ -294,8 +365,12 @@ namespace Feat1.MeshCut.MeshCutModule {
              * - then v[i] と helper(e[i-1]) を結ぶ対角線を D に挿入する
              * e[i-1] を T から削除する
              */
-            if (prevEdge.Helper?.VertexType == VertexType.Merge)
-                AddDiagonalEdge(currVertex, prevEdge.Helper);
+            if (prevEdge.Helper?.VertexType == VertexType.Merge) {
+
+				Debug.Log($"End(): prevEdge.Helper is Merge: {prevEdge.Helper.Address}");
+
+				AddDiagonalEdge(geometryGroup, currVertex, prevEdge.Helper);
+			}
 
             _edgeIntervalTree.RemoveEdge(prevEdge);
         }
@@ -330,7 +405,7 @@ namespace Feat1.MeshCut.MeshCutModule {
                     if (isRegularType)
                         isMoreCloser = isMoreCloser && edge.MinY <= EdgeComparer.HorizonY && EdgeComparer.HorizonY < edge.MaxY;
                     else
-                        isMoreCloser = isMoreCloser && edge.MinY < EdgeComparer.HorizonY && EdgeComparer.HorizonY < edge.MaxY;
+						isMoreCloser = isMoreCloser && edge.MinY + Epsilon < EdgeComparer.HorizonY && EdgeComparer.HorizonY + Epsilon < edge.MaxY;
 
                     // 条件を満たす場合、最も左側の辺を更新する
                     if (isNotContainsVertex && isMoreCloser)
@@ -368,59 +443,98 @@ namespace Feat1.MeshCut.MeshCutModule {
             return hasSolid;
         }
 
-        /// <summary>
-        /// 対角線を追加するメソッド
-        /// </summary>
-        /// <param name="startVertex"> 辺の始点 </param>
-        /// <param name="endVertex"> 辺の終点 </param>
-        /// <remarks>
-        /// 対角線が水平である場合，アクティブな辺に水平なものがあれば，これら二つが重なっている場合がある </br>
-        /// この場合は，重複した部分を取り除いて残る部分を対角線として追加する
-        /// </remarks>
-        private void AddDiagonalEdge(
-            NonConvexMonotoneCutSurfaceVertex startVertex,
-            NonConvexMonotoneCutSurfaceVertex endVertex
+		/// <summary>
+		/// 対角線を追加するメソッド
+		/// </summary>
+		/// <param name="geometryGroup"> 図形のグループ番号 </param>
+		/// <param name="diagonalStart"> 辺の始点 </param>
+		/// <param name="diagonalEnd"> 辺の終点 </param>
+		/// <remarks>
+		/// 対角線が水平である場合，アクティブな辺に水平なものがあれば，これら二つが重なっている場合がある </br>
+		/// この場合は，重複した部分を取り除いて残る部分を対角線として追加する
+		/// </remarks>
+		private void AddDiagonalEdge(
+            int geometryGroup,
+			NonConvexMonotoneCutSurfaceVertex diagonalStart,
+            NonConvexMonotoneCutSurfaceVertex diagonalEnd
         ) {
-            // 対角線が水平でない場合
-            if (Mathf.Abs(startVertex.PlanePosition.y - endVertex.PlanePosition.y) > Epsilon) {
 
-                // そのまま対角線を追加する
-                _diagonalSet.Add((startVertex, endVertex));
+            bool hasOverlapEdge = false;
+
+            (diagonalStart, diagonalEnd) = diagonalStart.PlanePosition.x < diagonalEnd.PlanePosition.x
+                ? (diagonalStart, diagonalEnd) 
+                : (diagonalEnd, diagonalStart);
+            NonConvexMonotoneCutSurfaceEdge diagonal = new(diagonalStart, diagonalEnd);
+
+			Vector2 diagonalGradient = (diagonalEnd.PlanePosition - diagonalStart.PlanePosition).normalized;
+
+            List<NonConvexMonotoneCutSurfaceEdge> overlapEdgeList = new();
+
+			foreach (var edge in _edgeList[geometryGroup]) {
+
+                Vector2 edgeGradient = (edge.End.PlanePosition - edge.Start.PlanePosition).normalized;
+
+				bool isParallelEdge = Mathf.Abs(Vector2.Dot(diagonalGradient, edgeGradient)) > 1.0f - Epsilon;
+
+                bool isOverlapEdge = diagonal.MinY < edge.MaxY && edge.MinY < diagonal.MaxY &&
+									 diagonal.MinX < edge.MaxX && edge.MinX < diagonal.MaxX;
+
+                if (isParallelEdge && isOverlapEdge) {
+
+					hasOverlapEdge = true;
+
+					var tmpEdge = edge.Start.PlanePosition.x < edge.End.PlanePosition.x
+						? edge
+						: new NonConvexMonotoneCutSurfaceEdge(edge.End, edge.Start);
+
+					overlapEdgeList.Add(tmpEdge);
+
+                    Debug.Log($" edge {tmpEdge.Start.Address} overlapped");
+				}
+			}
+
+			/** 対角線 AB, 辺 CD, 辺 EF のような場合
+             * A - C - D - E - F - B
+             * のような場合は、対角線 AC, 対角線 FB を挿入する
+             * 
+             * A/C - D - B
+             * のような場合は、対角線 DB を挿入する
+             */
+			if (hasOverlapEdge) {
+                // 頂点をX座標でソート
+                overlapEdgeList = overlapEdgeList
+                    .OrderBy(edge => edge.Start.PlanePosition.x)
+                    .ToList();
+
+                var newDiagonalStart = diagonal.Start;
+                var newDiagonalEnd = diagonal.End;
+                // ソートされた頂点を使って、重なっていない部分を対角線として追加
+                for (int i = 0; i < overlapEdgeList.Count; i++) {
+
+                    newDiagonalEnd = overlapEdgeList[i].Start;
+
+                    Debug.Log($"new diagonal end {newDiagonalEnd.Address}.");
+
+					if (!newDiagonalStart.Equals(newDiagonalEnd)) {
+						_diagonalSet.Add((newDiagonalStart, newDiagonalEnd));
+
+                        Debug.Log($"Add fix diagonal {newDiagonalStart.Address} <-> {newDiagonalEnd.Address}.");
+					}
+                    newDiagonalStart = overlapEdgeList[i].End;
+
+                    Debug.Log($"new diagonal start {newDiagonalStart.Address}.");
+				}
+                if (!newDiagonalStart.Equals(diagonal.End)) {
+                    _diagonalSet.Add((newDiagonalStart, diagonal.End));
+
+					Debug.Log($"Add fix diagonal {newDiagonalStart.Address} <-> {diagonal.End.Address}.");
+				}
             }
-            // 対角線が水平である場合
             else {
+                _diagonalSet.Add((diagonalStart, diagonalEnd));
 
-                (var diagonalMin, var diagonalMax) = startVertex.PlanePosition.x < endVertex.PlanePosition.x
-                        ? (startVertex, endVertex)
-                        : (endVertex, startVertex);
-
-                foreach (var edge in _sortedXPositionEdgeInTree.Keys) {
-
-                    // アクティブな辺のうち，水平のものである場合
-                    if (Mathf.Abs(edge.Start.PlanePosition.y - edge.End.PlanePosition.y) < Epsilon) {
-
-                        (var edgeMin, var edgeMax) = edge.Start.PlanePosition.x < edge.End.PlanePosition.x
-                                ? (edge.Start, edge.End)
-                                : (edge.End, edge.Start);
-
-                        // 対角線とアクティブな辺が重なっている場合
-                        if (diagonalMin.PlanePosition.x == edgeMin.PlanePosition.x && edgeMax.PlanePosition.x <= diagonalMax.PlanePosition.x) {
-
-                            _diagonalSet.Add((edgeMax, diagonalMax));
-                            break;
-                        }
-                        else if (diagonalMin.PlanePosition.x <= edgeMin.PlanePosition.x && edgeMax.PlanePosition.x == diagonalMax.PlanePosition.x) {
-
-                            _diagonalSet.Add((diagonalMin, edgeMin));
-                            break;
-                        }
-                        // 対角線とアクティブな辺が重なっていないならスルー
-                        else {
-                            continue;
-                        }
-                    }
-                }
-            }
-        }
-    }
+                Debug.Log($"Add origin diagonal {diagonalStart.Address} <-> {diagonalEnd.Address}.");
+			}
+		}
+	}
 }

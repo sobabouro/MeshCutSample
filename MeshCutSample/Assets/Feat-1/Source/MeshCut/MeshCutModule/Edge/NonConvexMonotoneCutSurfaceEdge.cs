@@ -10,10 +10,20 @@ namespace Feat1.MeshCut.MeshCutModule {
         /*デバッグ用*/
         public String Address;
 
-        /// <summary>
-        /// 辺の y 座標の最小値
-        /// </summary>
-        public float MinY => Mathf.Min(Start.PlanePosition.y, End.PlanePosition.y);
+		/// <summary>
+		/// 辺の x 座標の最小値
+		/// </summary>
+		public float MinX => Mathf.Min(Start.PlanePosition.x, End.PlanePosition.x);
+
+		/// <summary>
+		/// 辺の x 座標の最大値
+		/// </summary>
+		public float MaxX => Mathf.Max(Start.PlanePosition.x, End.PlanePosition.x);
+
+		/// <summary>
+		/// 辺の y 座標の最小値
+		/// </summary>
+		public float MinY => Mathf.Min(Start.PlanePosition.y, End.PlanePosition.y);
 
         /// <summary>
         /// 辺の y 座標の最大値

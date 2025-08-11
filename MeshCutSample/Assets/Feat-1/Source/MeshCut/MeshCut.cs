@@ -23,6 +23,7 @@ namespace Feat1.MeshCut {
 			Mesh targetMesh,
 			bool hasCutSurfaceMaterial = false
 		) {
+
 			// 切断平面が平行だと切断できないので、null を返す
 			if (localPlane.normal == Vector3.zero) {
 				Debug.LogError("平面が平行です");
@@ -34,6 +35,8 @@ namespace Feat1.MeshCut {
 
 			// 切断前オブジェクトのメッシュ情報の整理
 			MeshContainer originMesh = new(targetMesh);
+
+			Debug.Log($"切断前のメッシュ情報: {originMesh.Vertices.Count} 頂点, {originMesh.SubmeshCount} サブメッシュ");
 
 			// 切断後のメッシュ情報を格納
 			MeshContainer frontsideMesh = new();

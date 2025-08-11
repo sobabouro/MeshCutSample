@@ -65,11 +65,11 @@ namespace Feat1.MeshCut.MeshCutModule {
                     var nextNode = linkedVertex.TorusNext(currNode);
 
                     /*デバッグ用*/
-                    //var edge = new NonConvexMonotoneCutSurfaceEdge(currNode.Value, nextNode.Value);
-                    //edge.Address = $"e{currNode.Value.Address}";
-                    //_map.AddEdge(edge);
+                    var edge = new NonConvexMonotoneCutSurfaceEdge(currNode.Value, nextNode.Value);
+                    edge.Address = $"e{currNode.Value.Address}";
+                    _map.AddEdge(edge);
 
-                    _map.AddEdge(new NonConvexMonotoneCutSurfaceEdge(currNode.Value, nextNode.Value));
+                    //_map.AddEdge(new NonConvexMonotoneCutSurfaceEdge(currNode.Value, nextNode.Value));
 
                     UpdateMostHighestLowestPosition(currNode.Value);
                     currNode = nextNode;
@@ -78,20 +78,22 @@ namespace Feat1.MeshCut.MeshCutModule {
             }
 
             /*デバッグ用*/
-            //int diagonalCount = 0;
+            int diagonalCount = 0;
 
             // 対角線を追加する
             foreach (var diagonal in diagonalSet) {
 
-                /*デバッグ用*/
-                //var edge = new NonConvexMonotoneCutSurfaceEdge(diagonal.Item1, diagonal.Item2);
-                //edge.Address = $"diagonal[{diagonalCount++}]";
-                //_map.AddEdge(edge);
-                //_map.AddEdge(edge.GetReverseEdge());
+				Debug.Log($"MonotoneGeometryPathList: AddEdgeToMap() Diagonals {diagonal.Item1.Address} <-> {diagonal.Item2.Address}.");
 
-                _map.AddEdge(new NonConvexMonotoneCutSurfaceEdge(diagonal.Item1, diagonal.Item2));
-				_map.AddEdge(new NonConvexMonotoneCutSurfaceEdge(diagonal.Item2, diagonal.Item1));
-			}
+				/*デバッグ用*/
+				var edge = new NonConvexMonotoneCutSurfaceEdge(diagonal.Item1, diagonal.Item2);
+                edge.Address = $"diagonal[{diagonalCount++}]";
+                _map.AddEdge(edge);
+                _map.AddEdge(edge.GetReverseEdge());
+
+                //_map.AddEdge(new NonConvexMonotoneCutSurfaceEdge(diagonal.Item1, diagonal.Item2));
+                //_map.AddEdge(new NonConvexMonotoneCutSurfaceEdge(diagonal.Item2, diagonal.Item1));
+            }
         }
 
         /// <summary>
@@ -166,10 +168,14 @@ namespace Feat1.MeshCut.MeshCutModule {
                     if (isClosedPath && currPath.Count > 2) {
                         _pathList.Add(currPath);
 
-                        foreach (var pair in currPath) {
+						Debug.Log($"MonotoneGeometryPathList: Closed path found starting from {startVertex.Address} with {currPath.Count} vertices.");
+
+
+						foreach (var pair in currPath) {
                             visitedVertexSet.Add(pair.Item1);
-                        }
-                    }
+							Debug.Log($"{pair.Item1.Address}");
+						}
+					}
                     else {
                         Debug.LogWarning($"MonotoneGeometryPathList: Path starting from {startVertex.Address} could not be closed or was too short.");
                     }

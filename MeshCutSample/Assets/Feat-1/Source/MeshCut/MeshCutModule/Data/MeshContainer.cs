@@ -60,13 +60,26 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// </summary>
         public MeshContainer(Mesh originMesh) {
             Vertices = new List<Vector3>(originMesh.vertices);
-            Normals = new List<Vector3>(originMesh.normals);
-            UVs = new List<Vector2>(originMesh.uv);
-            Submesh = new List<List<int>>();
-            for (int i = 0; i < originMesh.subMeshCount; i++) {
-                Submesh.Add(new List<int>(originMesh.GetIndices(i)));
-            }
-        }
+
+			if (originMesh.normals != null && originMesh.normals.Length > 0) {
+				Normals = new List<Vector3>(originMesh.normals);
+			}
+			else {
+				Normals = new List<Vector3>();
+			}
+
+			if (originMesh.uv != null && originMesh.uv.Length > 0) {
+				UVs = new List<Vector2>(originMesh.uv);
+			}
+			else {
+				UVs = new List<Vector2>();
+			}
+
+			Submesh = new List<List<int>>();
+			for (int i = 0; i < originMesh.subMeshCount; i++) {
+				Submesh.Add(new List<int>(originMesh.GetIndices(i)));
+			}
+		}
 
         /// <summary>
         /// 切断対象のメッシュ情報のうち、任意の情報を新規メッシュ情報として追加するメソッド

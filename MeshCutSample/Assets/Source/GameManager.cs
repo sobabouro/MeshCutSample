@@ -76,6 +76,10 @@ public class GameManager : MonoBehaviour {
 		ObjectStatus targetStatus = target.GetComponent<ObjectStatus>();
 		Mesh targetMesh = target.GetComponent<MeshFilter>().mesh;
 
+		if (targetStatus == null || targetMesh == null) {
+			return;
+		}
+
 		if (targetStatus != null && targetMesh != null && targetStatus.IsCuttable()) {
 
 			try {

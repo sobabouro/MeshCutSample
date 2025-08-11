@@ -44,7 +44,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// <returns> 等しければ true, そうでなければ false </returns>
         public override bool Equals(AbstractCutSurfaceVertex other) {
             if (other is NonConvexMonotoneCutSurfaceVertex otherVertex) {
-                return LocalPosition.Equals(otherVertex.LocalPosition);
+                return PlanePosition.Equals(otherVertex.PlanePosition);
             }
             return false;
         }
@@ -57,8 +57,8 @@ namespace Feat1.MeshCut.MeshCutModule {
         public bool Equals(NonConvexMonotoneCutSurfaceVertex other) {
             if (other == null)
                 return false;
-            return LocalPosition.Equals(other.LocalPosition);
-        }
+            return PlanePosition.Equals(other.PlanePosition);
+		}
 
         /// <summary>
         /// GetHashCode メソッドのオーバーライド
