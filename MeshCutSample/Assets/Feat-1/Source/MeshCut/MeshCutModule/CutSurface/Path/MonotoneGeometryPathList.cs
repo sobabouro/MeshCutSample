@@ -83,7 +83,7 @@ namespace Feat1.MeshCut.MeshCutModule {
             // 対角線を追加する
             foreach (var diagonal in diagonalSet) {
 
-				Debug.Log($"MonotoneGeometryPathList: AddEdgeToMap() Diagonals {diagonal.Item1.Address} <-> {diagonal.Item2.Address}.");
+				//Debug.Log($"MonotoneGeometryPathList: AddEdgeToMap() Diagonals {diagonal.Item1.Address} <-> {diagonal.Item2.Address}.");
 
 				/*デバッグ用*/
 				var edge = new NonConvexMonotoneCutSurfaceEdge(diagonal.Item1, diagonal.Item2);
@@ -168,12 +168,12 @@ namespace Feat1.MeshCut.MeshCutModule {
                     if (isClosedPath && currPath.Count > 2) {
                         _pathList.Add(currPath);
 
-						Debug.Log($"MonotoneGeometryPathList: Closed path found starting from {startVertex.Address} with {currPath.Count} vertices.");
+						//Debug.Log($"MonotoneGeometryPathList: Closed path found starting from {startVertex.Address} with {currPath.Count} vertices.");
 
 
 						foreach (var pair in currPath) {
                             visitedVertexSet.Add(pair.Item1);
-							Debug.Log($"{pair.Item1.Address}");
+							//Debug.Log($"{pair.Item1.Address}");
 						}
 					}
                     else {

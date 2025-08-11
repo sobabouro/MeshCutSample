@@ -103,11 +103,11 @@ namespace Feat1.MeshCut.MeshCutModule {
             }
             _indexBeforeSortY = linkedVertexList.GetAllIndexSortedPlanePositionY();
 
-            for (int i = 0; i < _edgeList.Count; i++) {
-                for (int j = 0; j < _edgeList[i].Count; j++) {
-                    Debug.Log($"Edge[{i}][{j}]: {_edgeList[i][j].Start.VertexType} - {_edgeList[i][j].Start.PlanePosition} ,  {_edgeList[i][j].End.VertexType} - {_edgeList[i][j].End.PlanePosition}");
-                }
-            }
+            //for (int i = 0; i < _edgeList.Count; i++) {
+            //    for (int j = 0; j < _edgeList[i].Count; j++) {
+            //        Debug.Log($"Edge[{i}][{j}]: {_edgeList[i][j].Start.VertexType} - {_edgeList[i][j].Start.PlanePosition} ,  {_edgeList[i][j].End.VertexType} - {_edgeList[i][j].End.PlanePosition}");
+            //    }
+            //}
         }
 
         /// <summary>
@@ -134,7 +134,7 @@ namespace Feat1.MeshCut.MeshCutModule {
                     /*デバッグ用*/
                     currVertex.Address = $"v[{geometryGroup}, {vertexIndexOfGeometry}]";
 
-                    Debug.Log($"Processing vertex: {currVertex.Address} - Type: {currVertex.VertexType}");
+                    //Debug.Log($"Processing vertex: {currVertex.Address} - Type: {currVertex.VertexType}");
 
 					var currEdge = _edgeList[geometryGroup][vertexIndexOfGeometry];
 
@@ -203,7 +203,7 @@ namespace Feat1.MeshCut.MeshCutModule {
             _edgeIntervalTree.AddEdge(currEdge);
             currEdge.Helper = currVertex;
 
-            Debug.Log($"Start(): set helper e{currEdge.Helper.Address} to {currEdge.Start.Address}.");
+            //Debug.Log($"Start(): set helper e{currEdge.Helper.Address} to {currEdge.Start.Address}.");
 		}
 
 		/// <summary>
@@ -225,18 +225,18 @@ namespace Feat1.MeshCut.MeshCutModule {
              */
             var mostLeftNeighboringEdge = GetEdgeMostLeftNeighboringFromVertex(currVertex);
 
-            Debug.Log($"Split(): most left e{mostLeftNeighboringEdge?.Start.Address}");
+            //Debug.Log($"Split(): most left e{mostLeftNeighboringEdge?.Start.Address}");
 
 			AddDiagonalEdge(geometryGroup, currVertex, mostLeftNeighboringEdge.Helper);
 
             mostLeftNeighboringEdge.Helper = currVertex;
 
-            Debug.Log($"Spilit(): set helper e{mostLeftNeighboringEdge.Start.Address} to {mostLeftNeighboringEdge.Helper.Address}");
+            //Debug.Log($"Spilit(): set helper e{mostLeftNeighboringEdge.Start.Address} to {mostLeftNeighboringEdge.Helper.Address}");
 
 			_edgeIntervalTree.AddEdge(currEdge);
             currEdge.Helper = currVertex;
 
-			Debug.Log($"Split(): set helper e{currEdge.Helper.Address} to {currEdge.Start.Address}.");
+			//Debug.Log($"Split(): set helper e{currEdge.Helper.Address} to {currEdge.Start.Address}.");
 		}
 
 		/// <summary>
@@ -269,7 +269,7 @@ namespace Feat1.MeshCut.MeshCutModule {
 
             if (prevEdge.Helper?.VertexType == VertexType.Merge) {
 
-                Debug.Log($"Regular(): prevEdge.Helper is Merge: {prevEdge.Helper.Address}");
+                //Debug.Log($"Regular(): prevEdge.Helper is Merge: {prevEdge.Helper.Address}");
 
 				AddDiagonalEdge(geometryGroup, currVertex, prevEdge.Helper);
                 _edgeIntervalTree.RemoveEdge(prevEdge);
@@ -280,29 +280,29 @@ namespace Feat1.MeshCut.MeshCutModule {
 
                 var mostLeftNeighboringEdge = GetEdgeMostLeftNeighboringFromVertex(currVertex);
 
-                Debug.Log($"Regular(): most left e{mostLeftNeighboringEdge?.Start.Address}");
+                //Debug.Log($"Regular(): most left e{mostLeftNeighboringEdge?.Start.Address}");
 
 				if (mostLeftNeighboringEdge == null) {
 					currEdge.Helper = currVertex;
 
-                    Debug.Log($"Regular(): no most left. set helper e{currEdge.Start.Address} to {currEdge.Helper.Address}.");
+                    //Debug.Log($"Regular(): no most left. set helper e{currEdge.Start.Address} to {currEdge.Helper.Address}.");
 
 					return;
 				}
 
 				if (mostLeftNeighboringEdge.Helper?.VertexType == VertexType.Merge) {
 
-                    Debug.Log($"Regular(): most left helper is Merge: {mostLeftNeighboringEdge.Helper.Address}");
+                    //Debug.Log($"Regular(): most left helper is Merge: {mostLeftNeighboringEdge.Helper.Address}");
 
 					AddDiagonalEdge(geometryGroup, currVertex, mostLeftNeighboringEdge.Helper);
                 }
                 currEdge.Helper = currVertex;
 
-                Debug.Log($"Regular(): set helper e{currEdge.Start.Address} to {currEdge.Helper.Address}.");
+                //Debug.Log($"Regular(): set helper e{currEdge.Start.Address} to {currEdge.Helper.Address}.");
 
 				mostLeftNeighboringEdge.Helper = currVertex;
 
-                Debug.Log($"Regular(): set helper e{mostLeftNeighboringEdge.Start.Address} to {mostLeftNeighboringEdge.Helper.Address}.");
+                //Debug.Log($"Regular(): set helper e{mostLeftNeighboringEdge.Start.Address} to {mostLeftNeighboringEdge.Helper.Address}.");
 			}
         }
 
@@ -326,27 +326,28 @@ namespace Feat1.MeshCut.MeshCutModule {
              * - then v[i] と helper(e[j]) を結ぶ対角線を D に挿入する
              * helper(e[j]) を v[i] にする
              */
-            if (prevEdge.Helper?.VertexType == VertexType.Merge)
+            if (prevEdge.Helper?.VertexType == VertexType.Merge) {
 
-                Debug.Log($"Merge(): prevEdge.Helper is Merge: {prevEdge.Helper.Address}");
+				//Debug.Log($"Merge(): prevEdge.Helper is Merge: {prevEdge.Helper.Address}");
 
-			AddDiagonalEdge(geometryGroup, currVertex, prevEdge.Helper);
+				AddDiagonalEdge(geometryGroup, currVertex, prevEdge.Helper);
+			}
 
             _edgeIntervalTree.RemoveEdge(prevEdge);
             var mostLeftNeighboringEdge = GetEdgeMostLeftNeighboringFromVertex(currVertex);
 
-            Debug.Log($"Merge(): most left e{mostLeftNeighboringEdge?.Start.Address}");
+            //Debug.Log($"Merge(): most left e{mostLeftNeighboringEdge?.Start.Address}");
 
             if (mostLeftNeighboringEdge.Helper?.VertexType == VertexType.Merge) {
 
-                Debug.Log($"Merge(): most left helper is Merge: e{mostLeftNeighboringEdge.Helper.Address}");
+                //Debug.Log($"Merge(): most left helper is Merge: e{mostLeftNeighboringEdge.Helper.Address}");
 
 				AddDiagonalEdge(geometryGroup, currVertex, mostLeftNeighboringEdge.Helper);
 			}
 
             mostLeftNeighboringEdge.Helper = currVertex;
 
-            Debug.Log($"Merge(): set helper e{mostLeftNeighboringEdge.Start.Address} to {mostLeftNeighboringEdge.Helper.Address}.");
+            //Debug.Log($"Merge(): set helper e{mostLeftNeighboringEdge.Start.Address} to {mostLeftNeighboringEdge.Helper.Address}.");
 		}
 
 		/// <summary>
@@ -367,7 +368,7 @@ namespace Feat1.MeshCut.MeshCutModule {
              */
             if (prevEdge.Helper?.VertexType == VertexType.Merge) {
 
-				Debug.Log($"End(): prevEdge.Helper is Merge: {prevEdge.Helper.Address}");
+				//Debug.Log($"End(): prevEdge.Helper is Merge: {prevEdge.Helper.Address}");
 
 				AddDiagonalEdge(geometryGroup, currVertex, prevEdge.Helper);
 			}
@@ -489,7 +490,7 @@ namespace Feat1.MeshCut.MeshCutModule {
 
 					overlapEdgeList.Add(tmpEdge);
 
-                    Debug.Log($" edge {tmpEdge.Start.Address} overlapped");
+                    //Debug.Log($" edge {tmpEdge.Start.Address} overlapped");
 				}
 			}
 
@@ -513,27 +514,27 @@ namespace Feat1.MeshCut.MeshCutModule {
 
                     newDiagonalEnd = overlapEdgeList[i].Start;
 
-                    Debug.Log($"new diagonal end {newDiagonalEnd.Address}.");
+                    //Debug.Log($"new diagonal end {newDiagonalEnd.Address}.");
 
 					if (!newDiagonalStart.Equals(newDiagonalEnd)) {
 						_diagonalSet.Add((newDiagonalStart, newDiagonalEnd));
 
-                        Debug.Log($"Add fix diagonal {newDiagonalStart.Address} <-> {newDiagonalEnd.Address}.");
+                        //Debug.Log($"Add fix diagonal {newDiagonalStart.Address} <-> {newDiagonalEnd.Address}.");
 					}
                     newDiagonalStart = overlapEdgeList[i].End;
 
-                    Debug.Log($"new diagonal start {newDiagonalStart.Address}.");
+                    //Debug.Log($"new diagonal start {newDiagonalStart.Address}.");
 				}
                 if (!newDiagonalStart.Equals(diagonal.End)) {
                     _diagonalSet.Add((newDiagonalStart, diagonal.End));
 
-					Debug.Log($"Add fix diagonal {newDiagonalStart.Address} <-> {diagonal.End.Address}.");
+					//Debug.Log($"Add fix diagonal {newDiagonalStart.Address} <-> {diagonal.End.Address}.");
 				}
             }
             else {
                 _diagonalSet.Add((diagonalStart, diagonalEnd));
 
-                Debug.Log($"Add origin diagonal {diagonalStart.Address} <-> {diagonalEnd.Address}.");
+                //Debug.Log($"Add origin diagonal {diagonalStart.Address} <-> {diagonalEnd.Address}.");
 			}
 		}
 	}

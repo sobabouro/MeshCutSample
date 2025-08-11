@@ -36,8 +36,6 @@ namespace Feat1.MeshCut {
 			// 切断前オブジェクトのメッシュ情報の整理
 			MeshContainer originMesh = new(targetMesh);
 
-			Debug.Log($"切断前のメッシュ情報: {originMesh.Vertices.Count} 頂点, {originMesh.SubmeshCount} サブメッシュ");
-
 			// 切断後のメッシュ情報を格納
 			MeshContainer frontsideMesh = new();
 			MeshContainer backsideMesh = new();
