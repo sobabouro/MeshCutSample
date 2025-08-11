@@ -185,6 +185,7 @@ public class GameManager : MonoBehaviour {
 
             newMaterials = new Material[baseMaterials.Length + 1];
 			baseMaterials.CopyTo(newMaterials, 0);
+
 			newMaterials[newMaterials.Length - 1] = cutSurfaceMaterial;
 		}
 		else {

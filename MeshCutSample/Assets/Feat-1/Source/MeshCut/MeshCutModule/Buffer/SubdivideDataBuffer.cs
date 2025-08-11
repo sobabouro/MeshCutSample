@@ -52,7 +52,15 @@ namespace Feat1.MeshCut.MeshCutModule {
             _polygonBuffer.Add(polygonNormal, polygon);
         }
 
-        public void MakeAllPolygon(
+		/// <summary>
+		/// 切断面のポリゴンを生成するメソッド
+		/// </summary>
+		/// <param name="trackerArray"> 振分情報と元頂点インデックスが対応している配列 </param>
+		/// <param name="originMesh"> 切断前のメッシュコンテナ </param>
+		/// <param name="frontsideMesh"> 切断後の法線側メッシュコンテナ </param>
+		/// <param name="backsideMesh"> 切断後の反法線側のメッシュコンテナ </param>
+		/// <param name="hasCutSurfaceMaterial"> 新規マテリアルがあるかどうか </param>
+		public void MakeAllPolygon(
             int[] trackerArray,
             MeshContainer originMesh,
             MeshContainer frontsideMesh,
@@ -66,6 +74,13 @@ namespace Feat1.MeshCut.MeshCutModule {
                 backsideMesh,
                 _cutSurfacePolygonBuffer
             );
+
+            // 新規マテリアルがある場合、新規マテリアル用のサブメッシュ配列を追加する
+            if (hasCutSurfaceMaterial) {
+                frontsideMesh.AddNewSubmesh();
+				backsideMesh.AddNewSubmesh();
+			}
+
             _cutSurfacePolygonBuffer.MakeCutSurfacePolygon(
                 frontsideMesh,
                 backsideMesh,

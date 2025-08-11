@@ -100,7 +100,13 @@ namespace Feat1.MeshCut.MeshCutModule {
             int originIndex2,
             int originIndex3
         ) {
-            int indexCount = Vertices.Count;
+
+			if (submeshDepartment < 0 || submeshDepartment >= Submesh.Count) {
+				Debug.LogError($"MeshContainer: Invalid submesh department index {submeshDepartment}.");
+				return;
+			}
+
+			int indexCount = Vertices.Count;
 
             for (int i = 0; i < 3; i++) {
                 Submesh[submeshDepartment].Add(indexCount + i);
@@ -137,7 +143,13 @@ namespace Feat1.MeshCut.MeshCutModule {
             Vector3[] newNormals,
             Vector2[] newUVs
         ) {
-            int indexCount = Vertices.Count;
+
+			if (submeshDepartment < 0 || submeshDepartment >= Submesh.Count) {
+				Debug.LogError($"MeshContainer: Invalid submesh department index {submeshDepartment}.");
+				return;
+			}
+
+			int indexCount = Vertices.Count;
             int[] sequence = new int[] { 0, 1, 2 };
 
             Vector3 calNormal = Vector3.Cross(
@@ -152,7 +164,7 @@ namespace Feat1.MeshCut.MeshCutModule {
             }
 
             for (int i = 0; i < 3; i++) {
-                Submesh[submeshDepartment].Add(indexCount + i);
+				Submesh[submeshDepartment].Add(indexCount + i);
             }
             Vertices.AddRange(new Vector3[] {
                     newVertices[sequence[0]],
@@ -188,12 +200,19 @@ namespace Feat1.MeshCut.MeshCutModule {
             index = Vertices.Count - 1;
         }
 
-        /// <summary>
-        /// 新規メッシュの頂点番号をもとに、法線ベクトルを計算するメソッド
-        /// </summary>
-        /// <param name="triangle"> ポリゴンのトライアングル情報 </param>
-        /// <returns> ポリゴンの法線 (正規化) </returns>
-        public Vector3 GetNormal(int[] triangle) {
+		/// <summary>
+		/// 新規サブメッシュを追加するメソッド
+		/// </summary>
+		public void AddNewSubmesh() {
+			Submesh.Add(new List<int>());
+		}
+
+		/// <summary>
+		/// 新規メッシュの頂点番号をもとに、法線ベクトルを計算するメソッド
+		/// </summary>
+		/// <param name="triangle"> ポリゴンのトライアングル情報 </param>
+		/// <returns> ポリゴンの法線 (正規化) </returns>
+		public Vector3 GetNormal(int[] triangle) {
             return Vector3.Cross(
                 Vertices[triangle[1]] - Vertices[triangle[0]],
                 Vertices[triangle[2]] - Vertices[triangle[0]]
@@ -212,11 +231,16 @@ namespace Feat1.MeshCut.MeshCutModule {
             int thisIndex2,
             int thisIndex3
         ) {
-            Submesh[submeshDepartment].AddRange(new int[] {
-                    thisIndex1,
-                    thisIndex2,
-                    thisIndex3
-                });
+            if (submeshDepartment < 0 || submeshDepartment >= Submesh.Count) {
+				Debug.LogError($"MeshContainer: Invalid submesh department index {submeshDepartment}.");
+				return;
+			}
+
+			Submesh[submeshDepartment].AddRange(new int[] {
+                thisIndex1,
+                thisIndex2,
+                thisIndex3
+            });
         }
 
         /// <summary>
@@ -237,8 +261,16 @@ namespace Feat1.MeshCut.MeshCutModule {
                 mesh.SetIndices(Submesh[i].ToArray(), MeshTopology.Triangles, i, false);
             }
             mesh.RecalculateBounds();
-            //DisplayMeshInfo();
-            return mesh;
+
+
+            Debug.Log($"MeshContainer: Mesh '{name}' created with {Vertices.Count} vertices, {Normals.Count} normals, {UVs.Count} UVs, and {Submesh.Count} submeshes.");
+
+			foreach (var submesh in Submesh[SubmeshCount - 1]) {
+				Debug.Log($"index: {submesh}");
+			}
+
+			//DisplayMeshInfo();
+			return mesh;
         }
 
         private void DisplayMeshInfo() {

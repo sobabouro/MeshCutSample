@@ -155,7 +155,8 @@ namespace Feat1.MeshCut.MeshCutModule {
             MeshContainer frontsideMesh,
             MeshContainer backsideMesh
         ) {
-            if (_path.Count <= 4) {
+
+			if (_path.Count <= 4) {
                 SinpleMakePolygon(publicBoundingBox, localPlane, hasCutSurfaceMaterial, frontsideMesh, backsideMesh);
             }
             else {
@@ -321,7 +322,7 @@ namespace Feat1.MeshCut.MeshCutModule {
             }
             if (_path.Count == 4) {
 
-                var firstVertex = _path.First.Value.Item1;
+				var firstVertex = _path.First.Value.Item1;
                 var secondVertex = _path.First.Next.Value.Item1;
                 var thirdVertex = _path.Last.Previous.Value.Item1;
                 var fourthVertex = _path.Last.Value.Item1;
@@ -444,26 +445,27 @@ namespace Feat1.MeshCut.MeshCutModule {
             Vector3 vertex3 = triangle.Item3.LocalPosition;
 
             Vector2 uv1 = new(
-                triangle.Item1.PlanePosition.x - boundingBox.MinX / boundingBox.Width,
-                triangle.Item1.PlanePosition.y - boundingBox.MinY / boundingBox.Height
+                (triangle.Item1.PlanePosition.x - boundingBox.MinX) / boundingBox.Width,
+                (triangle.Item1.PlanePosition.y - boundingBox.MinY) / boundingBox.Height
             );
             Vector2 uv2 = new(
-                triangle.Item2.PlanePosition.x - boundingBox.MinX / boundingBox.Width,
-                triangle.Item2.PlanePosition.y - boundingBox.MinY / boundingBox.Height
+                (triangle.Item2.PlanePosition.x - boundingBox.MinX) / boundingBox.Width,
+                (triangle.Item2.PlanePosition.y - boundingBox.MinY) / boundingBox.Height
             );
             Vector2 uv3 = new(
-                triangle.Item3.PlanePosition.x - boundingBox.MinX / boundingBox.Width,
-                triangle.Item3.PlanePosition.y - boundingBox.MinY / boundingBox.Height
+                (triangle.Item3.PlanePosition.x - boundingBox.MinX) / boundingBox.Width,
+                (triangle.Item3.PlanePosition.y - boundingBox.MinY) / boundingBox.Height
             );
 
             int materialIndex = 0;
 
-            if (hasCutSurfaceMaterial)
-                materialIndex = frontsideMesh.SubmeshCount;
+            if (hasCutSurfaceMaterial) {
+				materialIndex = frontsideMesh.SubmeshCount - 1;
+			}
 
-            frontsideMesh.AddMesh(
+			frontsideMesh.AddMesh(
                 materialIndex,
-                -localPlane.normal,
+                localPlane.normal * -1,
                 new Vector3[] { vertex1, vertex2, vertex3 },
                 new Vector3[] { localPlane.normal, localPlane.normal, localPlane.normal },
                 new Vector2[] { uv1, uv2, uv3 }
