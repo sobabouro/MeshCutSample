@@ -262,13 +262,6 @@ namespace Feat1.MeshCut.MeshCutModule {
             }
             mesh.RecalculateBounds();
 
-
-            Debug.Log($"MeshContainer: Mesh '{name}' created with {Vertices.Count} vertices, {Normals.Count} normals, {UVs.Count} UVs, and {Submesh.Count} submeshes.");
-
-			foreach (var submesh in Submesh[SubmeshCount - 1]) {
-				Debug.Log($"index: {submesh}");
-			}
-
 			//DisplayMeshInfo();
 			return mesh;
         }
