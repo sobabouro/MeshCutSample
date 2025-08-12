@@ -4,12 +4,20 @@
     <img src="figs/cut_car.png" width="70%">
 </p>
 
+
 ## Description / 説明
 This Unity project constitutes a prototype implementation of a mesh-slicing algorithm in Unity.
 The algorithm is capable of partitioning three-dimensional objects—either non-convex or possessing holes with a genus of zero or greater—into two distinct three-dimensional objects by means of a cutter.
 
 Unity Mesh の切断アルゴリズムの試験実装をおこなった Unity プロジェクトです。
 この切断アルゴリズムでは、 種数 が 0 以上のオブジェクトや、非凸多角形オブジェクトを、カッターで 2 つのオブジェクトに分割します。
+
+
+## Examples / 例
+| Cube | Torus | Cube has Hole |
+| ---- | ---- | ---- |
+| <img src="figs/cut_cube.gif" width="100%"> | <img src="figs/cut_torus.gif" width="100%"> | <img src="figs/cut_cube_has_hole.gif" width="100%"> |
+
 
 ## Implementation flow / 実装フロー
 1. Precompute and store, for each vertex of the pre-sliced mesh, whether it resides on the normal side or the opposite (anti-normal) side of the slicing plane, as determined by the plane equation. <br>
@@ -30,9 +38,21 @@ Triangle (Submesh) 情報をもとに、三角形ポリゴンを構成する三�
 6. Instantiate a new mesh object from the post-slice mesh data, thereby completing the slicing process. <br>
 切断後メッシュで新規オブジェクトを生成し、切断処理を終了する。
 
-## Examples / 例
 
 ## Remark / 備考
+* Main module folder / 機能ごとのフォルダ
+    * Script modules for overall game scene management. <br>
+    ゲームシーン全体の管理をするスクリプト群 <br>
+    MeshCutSample/Assets/Source/
+
+    * Script modules for user line-drawing and cutting-plane construction. <br>
+    ユーザの線の描画機能と切断平面構築機能のスクリプト群 <br>
+    MeshCutSample/Assets/Feat-2/Source/
+
+    * Script modules for mesh cutting. <br>
+    メッシュの切断機能のスクリプト群 <br>
+    MeshCutSample/Assets/Feat-1/Source/
+
 
 ## References / 参考文献
 [1] de Berg, M., Cheong, O., van Kreveld, M., & Overmars, M. (2022). *Computational geometry: Algorithms and applications* (3rd ed., Japanese translation by T. Asano). Kindai Kagaku Sha. / ドバーグ, M., チョン, O., ファンクリベルド, M., & オーバマーズ, M.（著）, 浅野哲夫（訳）. (2022). *コンピュータ・ジオメトリ ― 計算幾何学：アルゴリズムと応用*（第3版）. 近代科学社.
