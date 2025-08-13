@@ -6,7 +6,7 @@ namespace Feat1.MeshCut.MeshCutModule {
     /// <summary>
     /// 非単調多角形 (y 単調多角形分割前) の頂点クラス 
     /// </summary>
-    public class NonConvexMonotoneCutSurfaceVertex : AbstractCutSurfaceVertex, IEquatable<NonConvexMonotoneCutSurfaceVertex> {
+    public class VertexTwoEarsTheorem : AbstractCutSurfaceVertex, IEquatable<VertexTwoEarsTheorem> {
 
         /*デバッグ用*/
         public String Address;
@@ -25,14 +25,14 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// ヘルパー頂点
         /// this 頂点と，ヘルパー頂点とをリンクするために保持する
         /// </summary>
-        public NonConvexMonotoneCutSurfaceVertex Helper;
+        public VertexTwoEarsTheorem Helper;
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="localPlane"> 切断平面 </param>
         /// <param name="localPosition"> 頂点の空間座標 </param>
-        public NonConvexMonotoneCutSurfaceVertex(Plane localPlane, Vector3 localPosition)
+        public VertexTwoEarsTheorem(Plane localPlane, Vector3 localPosition)
             : base(localPlane, localPosition) {
             Helper = default;
         }
@@ -43,7 +43,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// <param name="other"> AbstractCutSurfaceVertex 型オブジェクト </param>
         /// <returns> 等しければ true, そうでなければ false </returns>
         public override bool Equals(AbstractCutSurfaceVertex other) {
-            if (other is NonConvexMonotoneCutSurfaceVertex otherVertex) {
+            if (other is VertexTwoEarsTheorem otherVertex) {
                 return PlanePosition.Equals(otherVertex.PlanePosition);
             }
             return false;
@@ -52,9 +52,9 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// <summary>
         /// Equals メソッドのオーバーライド
         /// </summary>
-        /// <param name="other"> NonConvexMonotoneCutSurfaceVertex 型オブジェクト </param>
+        /// <param name="other"> VertexTwoEarsTheorem 型オブジェクト </param>
         /// <returns> 等しければ true, そうでなければ false </returns>
-        public bool Equals(NonConvexMonotoneCutSurfaceVertex other) {
+        public bool Equals(VertexTwoEarsTheorem other) {
             if (other == null)
                 return false;
             return PlanePosition.Equals(other.PlanePosition);

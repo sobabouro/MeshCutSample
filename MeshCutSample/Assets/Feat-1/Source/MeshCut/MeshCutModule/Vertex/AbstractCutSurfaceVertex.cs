@@ -53,7 +53,12 @@ namespace Feat1.MeshCut.MeshCutModule {
             );
         }
 
-        public void SetIndex(
+		/// <summary>
+		/// 切断平面上の頂点インデックスを設定するメソッド
+		/// </summary>
+		/// <param name="newFrontsideVertexIndex"> 切断後の法線側メッシュでの頂点インデックス </param>
+		/// <param name="newBucksideVertexIndex"> 切断後の反法線側メッシュでの頂点インデックス </param>
+		public void SetIndex(
             int newFrontsideVertexIndex,
             int newBucksideVertexIndex
         ) {

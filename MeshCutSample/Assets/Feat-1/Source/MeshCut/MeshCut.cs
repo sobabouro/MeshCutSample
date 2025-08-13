@@ -47,7 +47,7 @@ namespace Feat1.MeshCut {
 			int[] trackerArray = new int[originMesh.Vertices.Count];
 
 			// 切断処理が行われるポリゴンが切断された後の、新規ポリゴン情報を格納する
-			SubdivideDataBuffer subdivideDataBuffer = new(localPlane);
+			PolygonBufferManager _polygonBufferManager = new(localPlane);
 
 			// frontside と backside の各頂点情報配列のインデックスの判定用
 			int IndexCountAssignedFrontside = 0, IndexCountAssignedBackside = 0;
@@ -128,7 +128,7 @@ namespace Feat1.MeshCut {
 					else {
 						Vector3 polygonNormal = originMesh.GetNormal(triangle);
 						SideIndexInfo sideIndexInfo = SortIndex(triangle, triangleSideTruth);
-						subdivideDataBuffer.AddData(
+						_polygonBufferManager.AddData(
 							submeshGroupNumber,
 							polygonNormal,
 							sideIndexInfo
@@ -138,7 +138,7 @@ namespace Feat1.MeshCut {
 			}
 
 			// 融解・蓄積した切断対象ポリゴン情報をもとに、MeshTopology.Triangles で再生成を行う
-			subdivideDataBuffer.MakeAllPolygon(
+			_polygonBufferManager.MakeAllPolygon(
 				trackerArray,
 				originMesh,
 				frontsideMesh,

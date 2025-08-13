@@ -33,7 +33,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// <param name="diagonalSet"> 切断平面上のすべての非単調多角形を y に単調な多角形に分割するための対角線集合 </param>
         public MonotoneGeometryPathList(
             LinkedVertexList linkedVertexList,
-            HashSet<(NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex)> diagonalSet
+            HashSet<(VertexTwoEarsTheorem, VertexTwoEarsTheorem)> diagonalSet
         ) {
             _map = new();
             _pathList = new();
@@ -50,7 +50,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// <param name="diagonalSet"> 対角線集合 </param>
         private void CreateMap(
             LinkedVertexList linkedVertexList,
-            HashSet<(NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex)> diagonalSet
+            HashSet<(VertexTwoEarsTheorem, VertexTwoEarsTheorem)> diagonalSet
         ) {
             // 元の辺を追加する
             foreach (var linkedVertex in linkedVertexList) {
@@ -65,11 +65,11 @@ namespace Feat1.MeshCut.MeshCutModule {
                     var nextNode = linkedVertex.TorusNext(currNode);
 
                     /*デバッグ用*/
-                    var edge = new NonConvexMonotoneCutSurfaceEdge(currNode.Value, nextNode.Value);
+                    var edge = new EdgeTwoEarsTheorem(currNode.Value, nextNode.Value);
                     edge.Address = $"e{currNode.Value.Address}";
                     _map.AddEdge(edge);
 
-                    //_map.AddEdge(new NonConvexMonotoneCutSurfaceEdge(currNode.Value, nextNode.Value));
+                    //_map.AddEdge(new EdgeTwoEarsTheorem(currNode.Value, nextNode.Value));
 
                     UpdateMostHighestLowestPosition(currNode.Value);
                     currNode = nextNode;
@@ -86,13 +86,13 @@ namespace Feat1.MeshCut.MeshCutModule {
 				//Debug.Log($"MonotoneGeometryPathList: AddEdgeToMap() Diagonals {diagonal.Item1.Address} <-> {diagonal.Item2.Address}.");
 
 				/*デバッグ用*/
-				var edge = new NonConvexMonotoneCutSurfaceEdge(diagonal.Item1, diagonal.Item2);
+				var edge = new EdgeTwoEarsTheorem(diagonal.Item1, diagonal.Item2);
                 edge.Address = $"diagonal[{diagonalCount++}]";
                 _map.AddEdge(edge);
                 _map.AddEdge(edge.GetReverseEdge());
 
-                //_map.AddEdge(new NonConvexMonotoneCutSurfaceEdge(diagonal.Item1, diagonal.Item2));
-                //_map.AddEdge(new NonConvexMonotoneCutSurfaceEdge(diagonal.Item2, diagonal.Item1));
+                //_map.AddEdge(new EdgeTwoEarsTheorem(diagonal.Item1, diagonal.Item2));
+                //_map.AddEdge(new EdgeTwoEarsTheorem(diagonal.Item2, diagonal.Item1));
             }
         }
 
@@ -102,8 +102,8 @@ namespace Feat1.MeshCut.MeshCutModule {
         private void ScanPath() {
 
             // パス探索で訪問済みの辺を追跡するための集合
-            HashSet<NonConvexMonotoneCutSurfaceEdge> visitedEdgeSet = new();
-            HashSet<NonConvexMonotoneCutSurfaceVertex> visitedVertexSet = new(); // ループの始点として使用済みか追跡
+            HashSet<EdgeTwoEarsTheorem> visitedEdgeSet = new();
+            HashSet<VertexTwoEarsTheorem> visitedVertexSet = new(); // ループの始点として使用済みか追跡
 
             foreach (var keyVertex in _map.GetAllKeys().Where(v => !visitedVertexSet.Contains(v)).ToList()) {
 
@@ -115,9 +115,9 @@ namespace Feat1.MeshCut.MeshCutModule {
                         continue;
 
                     MonotoneGeometryPath currPath = new MonotoneGeometryPath();
-                    NonConvexMonotoneCutSurfaceVertex startVertex = currEdge.Start;
-                    NonConvexMonotoneCutSurfaceVertex currVertex = currEdge.Start;
-                    NonConvexMonotoneCutSurfaceVertex prevVertex = null;
+                    VertexTwoEarsTheorem startVertex = currEdge.Start;
+                    VertexTwoEarsTheorem currVertex = currEdge.Start;
+                    VertexTwoEarsTheorem prevVertex = null;
 
                     bool isClosedPath = false;
 
@@ -215,7 +215,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// x, y 座標の最も高い位置と最も低い位置を更新する
         /// </summary>
         /// <param name="vertex"> 追加する頂点 </param>
-        private void UpdateMostHighestLowestPosition(NonConvexMonotoneCutSurfaceVertex vertex) {
+        private void UpdateMostHighestLowestPosition(VertexTwoEarsTheorem vertex) {
             _boundingBox.TryUpdate(vertex.PlanePosition.x, vertex.PlanePosition.y);
         }
     }

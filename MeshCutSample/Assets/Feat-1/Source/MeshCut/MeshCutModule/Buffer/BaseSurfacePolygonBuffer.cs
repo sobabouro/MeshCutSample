@@ -6,7 +6,7 @@ namespace Feat1.MeshCut.MeshCutModule {
     /// <summary>
     /// 法線方向ごとにポリゴンの情報を保持するクラス
     /// </summary>
-    public class EquivalentNormalPolygonBuffer {
+    public class BaseSurfacePolygonBuffer {
 
         /// <summary>
         /// ローカル座標系の切断平面
@@ -22,7 +22,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// コンストラクタ
         /// </summary>
         /// <param name="localPlane"> ローカル座標系の切断平面 </param>
-        public EquivalentNormalPolygonBuffer(Plane localPlane) {
+        public BaseSurfacePolygonBuffer(Plane localPlane) {
             _localPlane = localPlane;
         }
 

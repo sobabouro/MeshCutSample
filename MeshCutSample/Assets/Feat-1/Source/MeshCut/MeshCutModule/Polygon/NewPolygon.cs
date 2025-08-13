@@ -16,27 +16,27 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// <summary>
         /// 切断によってできた辺の始点 (ポリゴンを形成する頂点が右回りになる向き)
         /// </summary>
-        public readonly NewVertex NewEdgeToward;
+        public readonly NewVertex TowardVertex;
 
         /// <summary>
         /// 切断によってできた辺の終点 (ポリゴンを形成する頂点が右回りになる向き)
         /// </summary>
-        public readonly NewVertex NewEdgeAway;
+        public readonly NewVertex AwayVertex;
 
         /// <summary>
         /// 新ポリゴン情報を管理するためのコンストラクタ
         /// </summary>
         /// <param name="submeshIndex"> サブメッシュのグループ番号 (マテリアル番号) </param>
-        /// <param name="newEdgePositive"> 切断辺を形成する新頂点の + 点 </param>
-        /// <param name="newEdgeNegative"> 切断辺を形成する新頂点の - 点 </param>
+        /// <param name="newVertexTowardPosition"> 切断辺を形成する新頂点の + 点 </param>
+        /// <param name="newVertexAwayPosition"> 切断辺を形成する新頂点の - 点 </param>
         public NewPolygon(
             int submeshIndex,
-            NewVertex newEdgePositive,
-            NewVertex newEdgeNegative
+            NewVertex newVertexTowardPosition,
+            NewVertex newVertexAwayPosition
         ) {
             SubmeshIndex = submeshIndex;
-            NewEdgeToward = newEdgePositive;
-            NewEdgeAway = newEdgeNegative;
+            TowardVertex = newVertexTowardPosition;
+            AwayVertex = newVertexAwayPosition;
         }
     }
 }

@@ -30,13 +30,13 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// vvondra.IntervalTree では Value を持つ区間をサポートしていない (区間のみでノード管理している)
         /// Interval<T> を毎回生成せず，参照型の edge をキーとして管理することで，RemoveEdge() の際の不要な探索と比較を回避する
         /// </remarks>
-        private readonly Dictionary<NonConvexMonotoneCutSurfaceEdge, Interval<float>> _edgeMap = new Dictionary<NonConvexMonotoneCutSurfaceEdge, Interval<float>>();
+        private readonly Dictionary<EdgeTwoEarsTheorem, Interval<float>> _edgeMap = new Dictionary<EdgeTwoEarsTheorem, Interval<float>>();
 
         /// <summary>
         /// EdgeIntervalTree に辺を追加するメソッド
         /// </summary>
         /// <param name="edge"> 追加する辺 </param>
-        public void AddEdge(NonConvexMonotoneCutSurfaceEdge edge) {
+        public void AddEdge(EdgeTwoEarsTheorem edge) {
 
             //Debug.Log($"EdgeIntervalTree: AddEdge - {edge.Start.VertexType} -> {edge.End.VertexType}, MinY: {edge.MinY}, MaxY: {edge.MaxY}");
 
@@ -49,7 +49,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// EdgeIntervalTree から辺を削除するメソッド
         /// </summary>
         /// <param name="edge"> 削除する辺 </param>
-        public void RemoveEdge(NonConvexMonotoneCutSurfaceEdge edge) {
+        public void RemoveEdge(EdgeTwoEarsTheorem edge) {
             if (_edgeMap.TryGetValue(edge, out var interval)) {
 
                 //Debug.Log($"EdgeIntervalTree: RemoveEdge - {edge.Start.VertexType} -> {edge.End.VertexType}, MinY: {edge.MinY}, MaxY: {edge.MaxY}");
@@ -64,9 +64,9 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// </summary>
         /// <param name="y"> 水平線の y 座標 </param>
         /// <returns> y 座標の水平線が通過する辺のリスト </returns>
-        public List<NonConvexMonotoneCutSurfaceEdge> GetEdgesPassThroughHorizon(float y) {
+        public List<EdgeTwoEarsTheorem> GetEdgesPassThroughHorizon(float y) {
 
-            var result = new List<NonConvexMonotoneCutSurfaceEdge>();
+            var result = new List<EdgeTwoEarsTheorem>();
             var candidates = _tree.Search(y);
 
             foreach (var pair in _edgeMap) {

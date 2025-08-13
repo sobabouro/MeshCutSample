@@ -22,7 +22,7 @@ namespace Feat1.MeshCut.MeshCutModule {
                 return false;
             }
 
-            if (_nodeSequence.Last?.Value.NewEdgeAway.Domein == polygon.NewEdgeToward.Domein || First == null) {
+            if (_nodeSequence.Last?.Value.AwayVertex.Domein == polygon.TowardVertex.Domein || First == null) {
                 _nodeSequence.AddLast(polygon);
                 return true;
             }
@@ -40,7 +40,7 @@ namespace Feat1.MeshCut.MeshCutModule {
                 return false;
             }
 
-            if (_nodeSequence.First?.Value.NewEdgeToward.Domein == polygon.NewEdgeAway.Domein) {
+            if (_nodeSequence.First?.Value.TowardVertex.Domein == polygon.AwayVertex.Domein) {
                 _nodeSequence.AddFirst(polygon);
                 return true;
             }
@@ -67,8 +67,8 @@ namespace Feat1.MeshCut.MeshCutModule {
             MeshContainer backsideMesh,
             CutSurfacePolygonBuffer cutSurfacePolygonBuffer
         ) {
-            NewVertex toward = First.Value.NewEdgeToward;
-            NewVertex away = Last.Value.NewEdgeAway;
+            NewVertex toward = First.Value.TowardVertex;
+            NewVertex away = Last.Value.AwayVertex;
 
             var (towardPosition, towardNormal, towardUV) = toward.CalcVertexInfo(localPlane, originMesh);
             var (awayPosition, awayNormal, awayUV) = away.CalcVertexInfo(localPlane, originMesh);
@@ -170,8 +170,8 @@ namespace Feat1.MeshCut.MeshCutModule {
                 targetsideMesh.MakeTriangle(
                     polygon.SubmeshIndex,
                     edgeIndex,
-                    trackerArray[polygon.NewEdgeAway.FrontsideVertexIndex],
-                    trackerArray[polygon.NewEdgeToward.FrontsideVertexIndex]
+                    trackerArray[polygon.AwayVertex.FrontsideVertexIndex],
+                    trackerArray[polygon.TowardVertex.FrontsideVertexIndex]
                 );
             }
             else {
@@ -181,8 +181,8 @@ namespace Feat1.MeshCut.MeshCutModule {
                 targetsideMesh.MakeTriangle(
                     polygon.SubmeshIndex,
                     edgeIndex,
-                    trackerArray[polygon.NewEdgeToward.BacksideVertexIndex],
-                    trackerArray[polygon.NewEdgeAway.BacksideVertexIndex]
+                    trackerArray[polygon.TowardVertex.BacksideVertexIndex],
+                    trackerArray[polygon.AwayVertex.BacksideVertexIndex]
                 );
             }
         }
@@ -205,8 +205,8 @@ namespace Feat1.MeshCut.MeshCutModule {
             bool isFrontside
         ) {
             int middleIndex = isFrontside
-                ? trackerArray[polygon.NewEdgeAway.FrontsideVertexIndex]
-                : trackerArray[polygon.NewEdgeToward.BacksideVertexIndex];
+                ? trackerArray[polygon.AwayVertex.FrontsideVertexIndex]
+                : trackerArray[polygon.TowardVertex.BacksideVertexIndex];
 
             targetsideMesh.MakeTriangle(
                 polygon.SubmeshIndex,

@@ -14,18 +14,18 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// コンストラクタ
         /// </summary>
         /// <param name="submeshIndex"> サブメッシュのグループ番号 (マテリアル番号) </param>
-        /// <param name="newEdgePositive"> 切断辺を形成する新頂点の + 点 </param>
-        /// <param name="newEdgeNegative"> 切断辺を形成する新頂点の - 点 </param>
+        /// <param name="newVertexTowardPosition"> 切断辺を形成する新頂点の + 点 </param>
+        /// <param name="newVertexAwayPosition"> 切断辺を形成する新頂点の - 点 </param>
         /// <param name="isFrontsideEdge"> 法線側に辺を持っているかどうか </param>
         public TrianglePolygon(
             int submeshIndex,
-            NewVertex newEdgePositive,
-            NewVertex newEdgeNegative,
+            NewVertex newVertexTowardPosition,
+            NewVertex newVertexAwayPosition,
             bool isFrontsideEdge
         ) : base(
             submeshIndex,
-            newEdgePositive,
-            newEdgeNegative
+            newVertexTowardPosition,
+            newVertexAwayPosition
         ) {
             IsFrontsideEdge = isFrontsideEdge;
         }

@@ -6,7 +6,7 @@ namespace Feat1.MeshCut.MeshCutModule {
     /// <summary>
     /// 非凸単調切断面の辺を比較するためのコンパレータクラス
     /// </summary>
-    public class EdgeComparer : IComparer<NonConvexMonotoneCutSurfaceEdge> {
+    public class EdgeComparer : IComparer<EdgeTwoEarsTheorem> {
 
         /// <summary>
         /// 浮動小数点数の誤差吸収用
@@ -27,7 +27,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// <param name="edge1"> 辺 1 </param>
         /// <param name="edge2"> 辺 2 </param>
         /// <returns> edge1 が edge2 より小さい場合は -1、等しい場合は 0、edge1 が edge2 より大きい場合は 1 を返す </returns>
-        public int Compare(NonConvexMonotoneCutSurfaceEdge? edge1, NonConvexMonotoneCutSurfaceEdge? edge2) {
+        public int Compare(EdgeTwoEarsTheorem? edge1, EdgeTwoEarsTheorem? edge2) {
 
             // 同じオブジェクトを比較する場合は等しいとみなす
             if (ReferenceEquals(edge1, edge2))

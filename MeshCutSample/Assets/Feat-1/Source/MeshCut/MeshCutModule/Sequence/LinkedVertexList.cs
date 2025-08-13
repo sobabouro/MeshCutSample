@@ -7,7 +7,7 @@ namespace Feat1.MeshCut.MeshCutModule {
     /// <summary>
     /// 連結辺シーケンス (LinkedVertex) のリストを管理するクラス
     /// </summary>
-    public class LinkedVertexList : AbstractNodeSequenceList<LinkedVertex, NonConvexMonotoneCutSurfaceVertex> {
+    public class LinkedVertexList : AbstractNodeSequenceList<LinkedVertex, VertexTwoEarsTheorem> {
 
         /// <summary>
         /// 連結辺シーケンスに頂点を追加するメソッド
@@ -15,7 +15,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// <param name="args"> (NewVertex 始点, NewVertex 終点) </param>
         public override void Add(params object[] args) {
 
-            if (args.Length != 2 || !(args[0] is NonConvexMonotoneCutSurfaceVertex toward) || !(args[1] is NonConvexMonotoneCutSurfaceVertex away)) {
+            if (args.Length != 2 || !(args[0] is VertexTwoEarsTheorem toward) || !(args[1] is VertexTwoEarsTheorem away)) {
                 Debug.LogError("Add for LinkedVertexList requires two NewVertex arguments.");
                 return;
             }
@@ -45,7 +45,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// <param name="key"> Add() によって追加した新有向辺の対応する頂点 </param>
         /// <param name="isAfter"> 前後のどちらに対してマージを試みるかを示すフラグ </param>
         /// <returns></returns>
-        protected override bool CheckMerge(NonConvexMonotoneCutSurfaceVertex target, NonConvexMonotoneCutSurfaceVertex key, bool isAfter) {
+        protected override bool CheckMerge(VertexTwoEarsTheorem target, VertexTwoEarsTheorem key, bool isAfter) {
 
             if (target == null)
                 return false;
@@ -68,9 +68,9 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// planePositon.y が等しい場合には， planePosition.x の昇順でソートする
         /// </summary>
         /// <returns> ソート結果配列 </returns>
-        public NonConvexMonotoneCutSurfaceVertex[] GetAllVertexSortedPlanePositionY() {
+        public VertexTwoEarsTheorem[] GetAllVertexSortedPlanePositionY() {
 
-            NonConvexMonotoneCutSurfaceVertex[] sortedPlanePositionY = _nodeSequenceList
+            VertexTwoEarsTheorem[] sortedPlanePositionY = _nodeSequenceList
                 .SelectMany(linkedVertex => linkedVertex.Vertices)
                 .OrderByDescending(vertex => vertex.PlanePosition.y)
                 .ThenBy(vertex => vertex.PlanePosition.x)

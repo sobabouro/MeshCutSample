@@ -6,7 +6,7 @@ namespace Feat1.MeshCut.MeshCutModule {
     /// <summary>
     /// 非単調な多角形 (y に単調な多角形への分割操作前) の辺クラス 
     /// </summary>
-    public class NonConvexMonotoneCutSurfaceEdge : Edge<NonConvexMonotoneCutSurfaceVertex> {
+    public class EdgeTwoEarsTheorem : Edge<VertexTwoEarsTheorem> {
         /*デバッグ用*/
         public String Address;
 
@@ -33,13 +33,13 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// <summary>
         /// ヘルパー頂点
         /// </summary>
-        public NonConvexMonotoneCutSurfaceVertex Helper {
+        public VertexTwoEarsTheorem Helper {
             get; set;
         }
 
-        public NonConvexMonotoneCutSurfaceEdge(
-            NonConvexMonotoneCutSurfaceVertex start,
-            NonConvexMonotoneCutSurfaceVertex end
+        public EdgeTwoEarsTheorem(
+            VertexTwoEarsTheorem start,
+            VertexTwoEarsTheorem end
         ) : base(start, end) {
             Helper = default;
         }
@@ -65,14 +65,14 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// this 辺の逆辺を取得するメソッド
         /// </summary>
         /// <returns> 対象の辺と逆向きの辺 </returns>
-        public NonConvexMonotoneCutSurfaceEdge GetReverseEdge() {
+        public EdgeTwoEarsTheorem GetReverseEdge() {
 
             /*デバッグ用*/
-            var edge = new NonConvexMonotoneCutSurfaceEdge(End, Start);
+            var edge = new EdgeTwoEarsTheorem(End, Start);
             edge.Address = Address + "_reverse";
             return edge;
 
-            //return new NonConvexMonotoneCutSurfaceEdge(End, Start);
+            //return new EdgeTwoEarsTheorem(End, Start);
         }
     }
 }

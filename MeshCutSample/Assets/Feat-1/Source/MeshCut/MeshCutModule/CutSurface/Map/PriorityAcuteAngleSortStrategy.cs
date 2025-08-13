@@ -13,12 +13,12 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// </summary>
         /// <param name="edgesWithAngles"> ソート対象の入射角度差タグを所持した切断辺リスト </param>
         /// <returns> ソートされた切断辺リスト </returns>
-        public List<NonConvexMonotoneCutSurfaceEdge> Sort(
-            IEnumerable<(NonConvexMonotoneCutSurfaceEdge edge, float angle)> edgesWithAngles
+        public List<EdgeTwoEarsTheorem> Sort(
+            IEnumerable<(EdgeTwoEarsTheorem edge, float angle)> edgesWithAngles
         ) {
             bool hasLeftTurnEdge = edgesWithAngles.Any(item => item.angle > 0);
 
-            IOrderedEnumerable<(NonConvexMonotoneCutSurfaceEdge edge, float angle)> sortedEdgesWithAngles;
+            IOrderedEnumerable<(EdgeTwoEarsTheorem edge, float angle)> sortedEdgesWithAngles;
 
             if (hasLeftTurnEdge) {
                 sortedEdgesWithAngles = edgesWithAngles

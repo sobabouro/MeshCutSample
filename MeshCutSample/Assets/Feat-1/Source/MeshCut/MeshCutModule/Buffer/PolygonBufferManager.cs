@@ -5,22 +5,20 @@ namespace Feat1.MeshCut.MeshCutModule {
     /// <summary>
     /// 切断処理が適用されるデータのバッファクラス
     /// </summary>
-    public class SubdivideDataBuffer {
-
-        private bool _isReady = false;
+    public class PolygonBufferManager {
 
         /// <summary>
         /// 法線方向ごとにポリゴンの情報を保持するバッファ
         /// </summary>
-        private EquivalentNormalPolygonBuffer _polygonBuffer;
+        private BaseSurfacePolygonBuffer _baseSurfacePolygonBuffer;
 
         /// <summary>
         /// 切断面のポリゴン情報を保持するバッファ
         /// </summary>
         private CutSurfacePolygonBuffer _cutSurfacePolygonBuffer;
 
-        public SubdivideDataBuffer(Plane localPlane) {
-            _polygonBuffer = new EquivalentNormalPolygonBuffer(localPlane);
+        public PolygonBufferManager(Plane localPlane) {
+            _baseSurfacePolygonBuffer = new BaseSurfacePolygonBuffer(localPlane);
             _cutSurfacePolygonBuffer = new CutSurfacePolygonBuffer(localPlane);
         }
 
@@ -49,7 +47,7 @@ namespace Feat1.MeshCut.MeshCutModule {
                 away,
                 input.IsFrontSideEdge
             );
-            _polygonBuffer.Add(polygonNormal, polygon);
+            _baseSurfacePolygonBuffer.Add(polygonNormal, polygon);
         }
 
 		/// <summary>
@@ -67,7 +65,7 @@ namespace Feat1.MeshCut.MeshCutModule {
             MeshContainer backsideMesh,
             bool hasNewCutSurfaceMaterial = false
         ) {
-            _polygonBuffer.MakeBaseSurfacePolygon(
+            _baseSurfacePolygonBuffer.MakeBaseSurfacePolygon(
                 trackerArray,
                 originMesh,
                 frontsideMesh,

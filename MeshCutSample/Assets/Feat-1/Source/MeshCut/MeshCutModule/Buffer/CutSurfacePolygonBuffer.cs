@@ -47,10 +47,10 @@ namespace Feat1.MeshCut.MeshCutModule {
             Vector3 towardPosition,
             Vector3 awayPosition
         ) {
-            NonConvexMonotoneCutSurfaceVertex towardCutSurfaceVertex = new(_localPlane, towardPosition);
-            NonConvexMonotoneCutSurfaceVertex awayCutSurfaceVertex = new(_localPlane, awayPosition);
+            VertexTwoEarsTheorem towardVertex = new(_localPlane, towardPosition);
+            VertexTwoEarsTheorem awayVertex = new(_localPlane, awayPosition);
 
-            _linkedVertexList.Add(towardCutSurfaceVertex, awayCutSurfaceVertex);
+            _linkedVertexList.Add(towardVertex, awayVertex);
         }
 
         /// <summary>
@@ -71,7 +71,7 @@ namespace Feat1.MeshCut.MeshCutModule {
             // すべての非単調な多角形が閉じたパス (図形) として保存しているリストから，y に単調な多角形に分割するための対角線を生成して，すべてのパスを保存する生成系をインスタンス化する
             DiagonalEdgeGenerator diagonalEdgeGenerator = new DiagonalEdgeGenerator(_linkedVertexList);
 
-            HashSet<(NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex)> diagonalSet = diagonalEdgeGenerator.GetDiagonalSet();
+            HashSet<(VertexTwoEarsTheorem, VertexTwoEarsTheorem)> diagonalSet = diagonalEdgeGenerator.GetDiagonalSet();
 
             _monotoneGeometryPathList = new MonotoneGeometryPathList(_linkedVertexList, diagonalSet);
             _monotoneGeometryPathList.MakePolygon(

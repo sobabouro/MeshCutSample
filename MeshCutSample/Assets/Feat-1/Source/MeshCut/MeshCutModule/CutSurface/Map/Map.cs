@@ -15,7 +15,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// <summary>
         /// 各頂点において，その頂点から接続するすべての辺へのマッピング
         /// </summary>
-        private readonly Dictionary<NonConvexMonotoneCutSurfaceVertex, List<NonConvexMonotoneCutSurfaceEdge>> _map;
+        private readonly Dictionary<VertexTwoEarsTheorem, List<EdgeTwoEarsTheorem>> _map;
 
         /// <summary>
         /// コンストラクタ
@@ -23,7 +23,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         public Map() {
 
             _sortStrategy = new PriorityLeftTurnSortStrategy();
-            _map = new Dictionary<NonConvexMonotoneCutSurfaceVertex, List<NonConvexMonotoneCutSurfaceEdge>>();
+            _map = new Dictionary<VertexTwoEarsTheorem, List<EdgeTwoEarsTheorem>>();
         }
 
         /// <summary>
@@ -32,14 +32,14 @@ namespace Feat1.MeshCut.MeshCutModule {
         public Map(IEdgeSortStrategy sortStrategy) {
 
             _sortStrategy = sortStrategy;
-            _map = new Dictionary<NonConvexMonotoneCutSurfaceVertex, List<NonConvexMonotoneCutSurfaceEdge>>();
+            _map = new Dictionary<VertexTwoEarsTheorem, List<EdgeTwoEarsTheorem>>();
         }
 
         /// <summary>
         /// グラフに無向辺を追加する
         /// </summary>
         /// <param name="edge"> 追加する辺 </param>"
-        public void AddEdge(NonConvexMonotoneCutSurfaceEdge edge) {
+        public void AddEdge(EdgeTwoEarsTheorem edge) {
 
             AddDirectedEdgeToMap(edge);
             //AddDirectedEdgeToMap(edge.GetReverseEdge());
@@ -49,11 +49,11 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// 指定された始点から終点への有向辺をマップに追加する
         /// </summary>
         /// <param name="edge"> 追加する有向辺 </param>
-        private void AddDirectedEdgeToMap(NonConvexMonotoneCutSurfaceEdge edge) {
+        private void AddDirectedEdgeToMap(EdgeTwoEarsTheorem edge) {
 
             // 始点のリストが存在しない場合は新規作成する
             if (!_map.ContainsKey(edge.Start))
-                _map[edge.Start] = new List<NonConvexMonotoneCutSurfaceEdge>();
+                _map[edge.Start] = new List<EdgeTwoEarsTheorem>();
 
             // 既に存在する辺でない場合のみ追加する
             if (!_map[edge.Start].Contains(edge)) {
@@ -71,12 +71,12 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// <param name="currVertex"> 現在の頂点 </param>
         /// <param name="prevVertex"> 前の頂点 </param>
         /// <returns> ソート済みの辺のリスト </returns>
-        public List<NonConvexMonotoneCutSurfaceEdge> GetSortedEdgesFromIncomingVector(
-            NonConvexMonotoneCutSurfaceVertex currVertex,
-            NonConvexMonotoneCutSurfaceVertex prevVertex
+        public List<EdgeTwoEarsTheorem> GetSortedEdgesFromIncomingVector(
+            VertexTwoEarsTheorem currVertex,
+            VertexTwoEarsTheorem prevVertex
         ) {
             if (!_map.TryGetValue(currVertex, out var edges)) {
-                return new List<NonConvexMonotoneCutSurfaceEdge>();
+                return new List<EdgeTwoEarsTheorem>();
             }
 
             Vector2 incomingVector = prevVertex == null || prevVertex.Equals(currVertex)
@@ -95,7 +95,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// <summary>
         /// グラフ内のすべての頂点を取得する
         /// </summary>
-        public IEnumerable<NonConvexMonotoneCutSurfaceVertex> GetAllKeys() {
+        public IEnumerable<VertexTwoEarsTheorem> GetAllKeys() {
             return _map.Keys;
         }
     }

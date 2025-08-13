@@ -8,12 +8,12 @@ namespace Feat1.MeshCut.MeshCutModule {
     /// <summary>
     /// 切断平面上の y 単調な多角形のパスを管理するクラス
     /// </summary>
-    public class MonotoneGeometryPath : IEnumerable<(NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex)> {
+    public class MonotoneGeometryPath : IEnumerable<(VertexTwoEarsTheorem, VertexTwoEarsTheorem)> {
 
         /// <summary>
         /// (始点, 直前の頂点) ペアのパス
         /// </summary>
-        private LinkedList<(NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex)> _path = new();
+        private LinkedList<(VertexTwoEarsTheorem, VertexTwoEarsTheorem)> _path = new();
 
         /// <summary>
         /// パスの要素数を取得するプロパティ
@@ -24,7 +24,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// パスのイテレータを返すメソッド
         /// </summary>
         /// <returns> シーケンスのリストを列挙するためのイテレータ </returns>
-        public IEnumerator<(NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex)> GetEnumerator() => _path.GetEnumerator();
+        public IEnumerator<(VertexTwoEarsTheorem, VertexTwoEarsTheorem)> GetEnumerator() => _path.GetEnumerator();
 
         /// <summary>
         /// IEnumerable インターフェースの GetEnumerator メソッドの実装
@@ -35,18 +35,18 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// <summary>
         /// パスの中で最も高い頂点のノード
         /// </summary>
-        private LinkedListNode<(NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex)> _mostHighestNode = null;
+        private LinkedListNode<(VertexTwoEarsTheorem, VertexTwoEarsTheorem)> _mostHighestNode = null;
 
         /// <summary>
         /// パスの中で最も低い頂点のノード
         /// </summary>
-        private LinkedListNode<(NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex)> _mostLowestNode = null;
+        private LinkedListNode<(VertexTwoEarsTheorem, VertexTwoEarsTheorem)> _mostLowestNode = null;
 
         /// <summary>
         /// パスの先頭に頂点を追加するメソッド
         /// </summary>
         /// <param name="pair"> 追加する頂点と辺のペア </param>
-        public void AddFirst((NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex) pair) {
+        public void AddFirst((VertexTwoEarsTheorem, VertexTwoEarsTheorem) pair) {
 
             _path.AddFirst(pair);
             UpdateExtremeNodes(pair, _path.First);
@@ -56,7 +56,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// パスの末尾に頂点を追加するメソッド
         /// </summary>
         /// <param name="pair"> 追加するペア </param>
-        public void AddLast((NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex) pair) {
+        public void AddLast((VertexTwoEarsTheorem, VertexTwoEarsTheorem) pair) {
 
             _path.AddLast(pair);
             UpdateExtremeNodes(pair, _path.Last);
@@ -68,8 +68,8 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// <param name="pair"> 追加したペア </param>
         /// <param name="newNode"> 追加したペアのノード </param>
         private void UpdateExtremeNodes(
-            (NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex) pair,
-            LinkedListNode<(NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex)> newNode
+            (VertexTwoEarsTheorem, VertexTwoEarsTheorem) pair,
+            LinkedListNode<(VertexTwoEarsTheorem, VertexTwoEarsTheorem)> newNode
         ) {
             if (_mostHighestNode == null) {
                 _mostHighestNode = newNode;
@@ -105,8 +105,8 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// </summary>
         /// <param name="node"> 対象ノード </param>
         /// <returns> 対象ノードの次のノード </returns>
-        public LinkedListNode<(NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex)> TorusNext(
-            LinkedListNode<(NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex)> node
+        public LinkedListNode<(VertexTwoEarsTheorem, VertexTwoEarsTheorem)> TorusNext(
+            LinkedListNode<(VertexTwoEarsTheorem, VertexTwoEarsTheorem)> node
         ) {
 
             if (node == null || _path.Count == 0)
@@ -121,8 +121,8 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// </summary>
         /// <param name="node"> 対象ノード </param>
         /// <returns> 対象ノードの前のノード </returns>
-        public LinkedListNode<(NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex)> TorusPrevious(
-            LinkedListNode<(NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex)> node
+        public LinkedListNode<(VertexTwoEarsTheorem, VertexTwoEarsTheorem)> TorusPrevious(
+            LinkedListNode<(VertexTwoEarsTheorem, VertexTwoEarsTheorem)> node
         ) {
 
             if (node == null || _path.Count == 0)
@@ -136,7 +136,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// </summary>
         /// <param name="vertex"> 判定する頂点 </param>
         /// <returns> 含まれていれば true, そうでなければ false を返す </returns>
-        public bool Contains(NonConvexMonotoneCutSurfaceVertex vertex) {
+        public bool Contains(VertexTwoEarsTheorem vertex) {
             return _path.Any(pair => pair.Item1.Equals(vertex));
         }
 
@@ -203,8 +203,8 @@ namespace Feat1.MeshCut.MeshCutModule {
 
             ClusteringSideType();
 
-            (NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex)[] sortedArray = SortVertexYPosition();
-            Stack<(NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex)> stack = new();
+            (VertexTwoEarsTheorem, VertexTwoEarsTheorem)[] sortedArray = SortVertexYPosition();
+            Stack<(VertexTwoEarsTheorem, VertexTwoEarsTheorem)> stack = new();
 
             stack.Push(sortedArray[0]);
             stack.Push(sortedArray[1]);
@@ -238,7 +238,7 @@ namespace Feat1.MeshCut.MeshCutModule {
                 else {
 
                     bool isProcessPermission = false;
-                    (NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex) prevLastPair = default;
+                    (VertexTwoEarsTheorem, VertexTwoEarsTheorem) prevLastPair = default;
 
                     while (stack.Count >= 2) {
 
@@ -380,7 +380,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// Y 座標がすべて異なれば，スイープラインアルゴリズムにおいては単純に降順でソートすればよいが、 </br>
         /// Y 座標が等しいものが混在する場合，一意にソートするためには、接続性に基づいて並び替える必要がある． </br>
         /// </remarks>
-        private (NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex)[] SortVertexYPosition() {
+        private (VertexTwoEarsTheorem, VertexTwoEarsTheorem)[] SortVertexYPosition() {
 
             var sortedList = _path
             .OrderByDescending(pair => pair.Item1.PlanePosition.y)
@@ -428,7 +428,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// <param name="backsideMesh"> 反法線側メッシュ </param>
         /// <param name="hasNewCutSurfaceMaterial"></param>
         private void CreateTriangle(
-            (NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex) triangle,
+            (VertexTwoEarsTheorem, VertexTwoEarsTheorem, VertexTwoEarsTheorem) triangle,
             BoundingBox boundingBox,
             Plane localPlane,
             MeshContainer frontsideMesh,

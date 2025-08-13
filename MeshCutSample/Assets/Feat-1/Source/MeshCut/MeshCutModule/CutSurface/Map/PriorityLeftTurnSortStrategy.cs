@@ -14,8 +14,8 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// </summary>
         /// <param name="edgesWithAngles"> ソート対象の入射角度差タグを所持した切断辺リスト </param>
         /// <returns> ソートされた切断辺リスト </returns>
-        public List<NonConvexMonotoneCutSurfaceEdge> Sort(
-            IEnumerable<(NonConvexMonotoneCutSurfaceEdge edge, float angle)> edgesWithAngles
+        public List<EdgeTwoEarsTheorem> Sort(
+            IEnumerable<(EdgeTwoEarsTheorem edge, float angle)> edgesWithAngles
         ) {
             return edgesWithAngles
                 .OrderByDescending(item => Mathf.Abs(item.angle) > 179.9f ? -181f : item.angle)

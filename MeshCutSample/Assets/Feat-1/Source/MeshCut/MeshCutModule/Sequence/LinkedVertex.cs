@@ -7,32 +7,32 @@ namespace Feat1.MeshCut.MeshCutModule {
     /// 連結辺の情報を保持するクラス
     /// 連結辺は切断辺の始点から終点の順を正方向として連結する
     /// </summary>
-    public class LinkedVertex : AbstractNodeSequence<NonConvexMonotoneCutSurfaceVertex> {
+    public class LinkedVertex : AbstractNodeSequence<VertexTwoEarsTheorem> {
 
         /// <summary>
         /// 連結辺シーケンスのコレクションを取得するプロパティ
         /// </summary>
-        public IEnumerable<NonConvexMonotoneCutSurfaceVertex> Vertices => GetItemsEnumerable();
+        public IEnumerable<VertexTwoEarsTheorem> Vertices => GetItemsEnumerable();
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
-        public LinkedVertex() : base(new DeleteDuplicateMergeStrategy<NonConvexMonotoneCutSurfaceVertex>()) { }
+        public LinkedVertex() : base(new DeleteDuplicateMergeStrategy<VertexTwoEarsTheorem>()) { }
 
         /// <summary>
         /// コンストラクタ
         /// </summary>
         /// <param name="mergeStrategy"> マージメソッド戦略 </param>
-        public LinkedVertex(INodeSequenceMergeStrategy<NonConvexMonotoneCutSurfaceVertex> mergeStrategy) : base(mergeStrategy) { }
+        public LinkedVertex(INodeSequenceMergeStrategy<VertexTwoEarsTheorem> mergeStrategy) : base(mergeStrategy) { }
 
         /// <summary>
         /// 対象の辺を連結辺に対して後ろに追加するメソッド
         /// </summary>
-        /// <param name="args"> (NonConvexMonotoneCutSurfaceVertex 始点, NonConvexMonotoneCutSurfaceVertex 終点) の引数 </param>
+        /// <param name="args"> (VertexTwoEarsTheorem 始点, VertexTwoEarsTheorem 終点) の引数 </param>
         /// <returns> 追加に成功した場合は true, 失敗した場合は false </returns>
         public override bool TryAppend(params object[] args) {
-            if (args.Length != 2 || !(args[0] is NonConvexMonotoneCutSurfaceVertex toward) || !(args[1] is NonConvexMonotoneCutSurfaceVertex away)) {
-                Debug.LogError("TryAppend for LinkedVertex requires two NonConvexMonotoneCutSurfaceVertex arguments.");
+            if (args.Length != 2 || !(args[0] is VertexTwoEarsTheorem toward) || !(args[1] is VertexTwoEarsTheorem away)) {
+                Debug.LogError("TryAppend for LinkedVertex requires two VertexTwoEarsTheorem arguments.");
                 return false;
             }
             var value = _nodeSequence.Last?.Value;
@@ -55,8 +55,8 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// <param name="args"> (NewVertex 始点, NewVertex 終点) の引数 </param>
         /// <returns> 追加に成功した場合は true, 失敗した場合は false </returns>
         public override bool TryPrepend(params object[] args) {
-            if (args.Length != 2 || !(args[0] is NonConvexMonotoneCutSurfaceVertex toward) || !(args[1] is NonConvexMonotoneCutSurfaceVertex away)) {
-                Debug.LogError("TryAppend for LinkedVertex requires two NonConvexMonotoneCutSurfaceVertex arguments.");
+            if (args.Length != 2 || !(args[0] is VertexTwoEarsTheorem toward) || !(args[1] is VertexTwoEarsTheorem away)) {
+                Debug.LogError("TryAppend for LinkedVertex requires two VertexTwoEarsTheorem arguments.");
                 return false;
             }
             var value = _nodeSequence.First?.Value;
@@ -76,9 +76,9 @@ namespace Feat1.MeshCut.MeshCutModule {
             var currentNode = _nodeSequence.First;
             while (currentNode != null) {
                 // 循環リストのようなイメージの走査を行うため，先頭と末尾は特別扱いする
-                NonConvexMonotoneCutSurfaceVertex prevVertex = currentNode.Previous?.Value ?? _nodeSequence.Last.Value;
-                NonConvexMonotoneCutSurfaceVertex currVertex = currentNode.Value;
-                NonConvexMonotoneCutSurfaceVertex nextVertex = currentNode.Next?.Value ?? _nodeSequence.First.Value;
+                VertexTwoEarsTheorem prevVertex = currentNode.Previous?.Value ?? _nodeSequence.Last.Value;
+                VertexTwoEarsTheorem currVertex = currentNode.Value;
+                VertexTwoEarsTheorem nextVertex = currentNode.Next?.Value ?? _nodeSequence.First.Value;
 
                 SetVertexType(prevVertex, currVertex, nextVertex);
                 currentNode = currentNode.Next;
@@ -91,7 +91,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// <param name="prevVertex"> 連続する頂点 1 </param>
         /// <param name="currVertex"> 連続する頂点 2 </param>
         /// <param name="nextVertex"> 連続する頂点 3 </param>
-        private void SetVertexType(NonConvexMonotoneCutSurfaceVertex prevVertex, NonConvexMonotoneCutSurfaceVertex currVertex, NonConvexMonotoneCutSurfaceVertex nextVertex) {
+        private void SetVertexType(VertexTwoEarsTheorem prevVertex, VertexTwoEarsTheorem currVertex, VertexTwoEarsTheorem nextVertex) {
             float prevY = prevVertex.PlanePosition.y;
             float currY = currVertex.PlanePosition.y;
             float nextY = nextVertex.PlanePosition.y;

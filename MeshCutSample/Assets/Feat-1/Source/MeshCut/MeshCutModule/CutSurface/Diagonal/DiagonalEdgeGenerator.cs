@@ -26,7 +26,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// 図形の辺のリスト (以下 "e" とする)
         /// v[i] を始点とする辺を e[i] とする (頂点は以下 "v" とする)
         /// </summary>
-        private List<List<NonConvexMonotoneCutSurfaceEdge>> _edgeList = new();
+        private List<List<EdgeTwoEarsTheorem>> _edgeList = new();
 
         /// <summary>
         /// 辺の走査を行うための木 (以下 "T" とする)
@@ -36,13 +36,13 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// <summary>
         /// T の中の辺を x 座標でソートした順序を保持するための辞書
         /// </summary>
-        private SortedDictionary<NonConvexMonotoneCutSurfaceEdge, NonConvexMonotoneCutSurfaceEdge> _sortedXPositionEdgeInTree = new(new EdgeComparer());
+        private SortedDictionary<EdgeTwoEarsTheorem, EdgeTwoEarsTheorem> _sortedXPositionEdgeInTree = new(new EdgeComparer());
 
         /// <summary>
         /// 対角線の集合 (以下 "D" とする)
         /// 一つの対角線を追加する際，両方向に分けて二つ追加していく
         /// </summary>
-        private HashSet<(NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex)> _diagonalSet = new();
+        private HashSet<(VertexTwoEarsTheorem, VertexTwoEarsTheorem)> _diagonalSet = new();
 
         /// <summary>
         /// コンストラクタ
@@ -60,7 +60,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// 対角線は一つの辺につき二本登録される (始点 -> 終点, 終点 -> 始点 の向き)
         /// </summary>
         /// <returns> 対角線のリスト </returns>
-        public HashSet<(NonConvexMonotoneCutSurfaceVertex, NonConvexMonotoneCutSurfaceVertex)> GetDiagonalSet() {
+        public HashSet<(VertexTwoEarsTheorem, VertexTwoEarsTheorem)> GetDiagonalSet() {
             return _diagonalSet;
         }
 
@@ -68,7 +68,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// 整形された辺のリストを取得するメソッド
         /// </summary>
         /// <returns> 辺のリスト </returns>
-        public List<List<NonConvexMonotoneCutSurfaceEdge>> GetEdgeList() {
+        public List<List<EdgeTwoEarsTheorem>> GetEdgeList() {
             return _edgeList;
         }
 
@@ -83,7 +83,7 @@ namespace Feat1.MeshCut.MeshCutModule {
 
             for (int i = 0; i < linkedVertexList.Count; i++) {
 
-                List<NonConvexMonotoneCutSurfaceEdge> edges = new();
+                List<EdgeTwoEarsTheorem> edges = new();
                 var list = linkedVertexList[i];
                 var currentNode = list.First;
 
@@ -93,7 +93,7 @@ namespace Feat1.MeshCut.MeshCutModule {
                     var endVertex = currentNode.Next != null ? currentNode.Next.Value : list.First.Value;
 
                     if (startVertex != null && endVertex != null && !startVertex.Equals(endVertex)) {
-                        NonConvexMonotoneCutSurfaceEdge edge = new NonConvexMonotoneCutSurfaceEdge(startVertex, endVertex);
+                        EdgeTwoEarsTheorem edge = new EdgeTwoEarsTheorem(startVertex, endVertex);
                         edges.Add(edge);
                         _edgeIntervalTree.AddEdge(edge);
                     }
@@ -194,8 +194,8 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// <param name="currVertex"> v[i] </param>
         /// <param name="currEdge"> e[i] </param>
         private void HandleStartVertex(
-            NonConvexMonotoneCutSurfaceVertex currVertex,
-            NonConvexMonotoneCutSurfaceEdge currEdge
+            VertexTwoEarsTheorem currVertex,
+            EdgeTwoEarsTheorem currEdge
         ) {
             /**
              * e[i] を T に挿入し，helper(e[i]) を v[i] とする
@@ -214,8 +214,8 @@ namespace Feat1.MeshCut.MeshCutModule {
 		/// <param name="currEdge"> e[i] </param>
 		private void HandleSplitVertex(
 			int geometryGroup,
-			NonConvexMonotoneCutSurfaceVertex currVertex,
-            NonConvexMonotoneCutSurfaceEdge currEdge
+			VertexTwoEarsTheorem currVertex,
+            EdgeTwoEarsTheorem currEdge
         ) {
             /**
              * T の中を探索して，v[i] のすぐ左にある辺 e[j] を求める
@@ -248,9 +248,9 @@ namespace Feat1.MeshCut.MeshCutModule {
 		/// <param name="prevEdge"> e[i-1] </param>
 		private void HandleRegularVertex(
 			int geometryGroup,
-			NonConvexMonotoneCutSurfaceVertex currVertex,
-            NonConvexMonotoneCutSurfaceEdge currEdge,
-            NonConvexMonotoneCutSurfaceEdge prevEdge
+			VertexTwoEarsTheorem currVertex,
+            EdgeTwoEarsTheorem currEdge,
+            EdgeTwoEarsTheorem prevEdge
         ) {
             /** 
              * if P の内部が v[i] の右にある
@@ -314,8 +314,8 @@ namespace Feat1.MeshCut.MeshCutModule {
 		/// <param name="prevEdge"> e[i-1] </param>
 		private void HandleMergeVertex(
 			int geometryGroup,
-			NonConvexMonotoneCutSurfaceVertex currVertex,
-            NonConvexMonotoneCutSurfaceEdge prevEdge
+			VertexTwoEarsTheorem currVertex,
+            EdgeTwoEarsTheorem prevEdge
         ) {
             /**
              * if helper(e[i-1]) が統合点である
@@ -358,8 +358,8 @@ namespace Feat1.MeshCut.MeshCutModule {
 		/// <param name="prevEdge"> e[i-1] </param>
 		private void HandleEndVertex(
             int geometryGroup,
-			NonConvexMonotoneCutSurfaceVertex currVertex,
-            NonConvexMonotoneCutSurfaceEdge prevEdge
+			VertexTwoEarsTheorem currVertex,
+            EdgeTwoEarsTheorem prevEdge
         ) {
             /**
              * if helper(e[i-1]) が統合点である
@@ -383,10 +383,10 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// <param name="vertex"> 頂点 </param>
         /// <returns> 頂点の最も左側にある辺 </returns>
         /// <exception cref="InvalidOperationException"> 隣接頂点がない場合 </exception>
-        private NonConvexMonotoneCutSurfaceEdge GetEdgeMostLeftNeighboringFromVertex(NonConvexMonotoneCutSurfaceVertex vertex) {
+        private EdgeTwoEarsTheorem GetEdgeMostLeftNeighboringFromVertex(VertexTwoEarsTheorem vertex) {
 
-            NonConvexMonotoneCutSurfaceEdge tmpSearchKey = new(vertex, vertex);
-            NonConvexMonotoneCutSurfaceEdge? mostLeftNeighboringEdge = null;
+            EdgeTwoEarsTheorem tmpSearchKey = new(vertex, vertex);
+            EdgeTwoEarsTheorem? mostLeftNeighboringEdge = null;
             bool isRegularType = vertex.VertexType == VertexType.Regular;
 
             foreach (var edge in _sortedXPositionEdgeInTree.Keys) {
@@ -426,7 +426,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// </summary>
         /// <param name="edge"> 判定対象の辺 </param>
         /// <returns> 辺の右側に図形の内部があれば true, 無ければ false を返す </returns>
-        private bool hasSolidInRightSide(NonConvexMonotoneCutSurfaceEdge edge) {
+        private bool hasSolidInRightSide(EdgeTwoEarsTheorem edge) {
             bool hasSolid = false;
 
             if (edge.Start.PlanePosition.y < edge.End.PlanePosition.y)
@@ -456,8 +456,8 @@ namespace Feat1.MeshCut.MeshCutModule {
 		/// </remarks>
 		private void AddDiagonalEdge(
             int geometryGroup,
-			NonConvexMonotoneCutSurfaceVertex diagonalStart,
-            NonConvexMonotoneCutSurfaceVertex diagonalEnd
+			VertexTwoEarsTheorem diagonalStart,
+            VertexTwoEarsTheorem diagonalEnd
         ) {
 
             bool hasOverlapEdge = false;
@@ -465,11 +465,11 @@ namespace Feat1.MeshCut.MeshCutModule {
             (diagonalStart, diagonalEnd) = diagonalStart.PlanePosition.x < diagonalEnd.PlanePosition.x
                 ? (diagonalStart, diagonalEnd) 
                 : (diagonalEnd, diagonalStart);
-            NonConvexMonotoneCutSurfaceEdge diagonal = new(diagonalStart, diagonalEnd);
+            EdgeTwoEarsTheorem diagonal = new(diagonalStart, diagonalEnd);
 
 			Vector2 diagonalGradient = (diagonalEnd.PlanePosition - diagonalStart.PlanePosition).normalized;
 
-            List<NonConvexMonotoneCutSurfaceEdge> overlapEdgeList = new();
+            List<EdgeTwoEarsTheorem> overlapEdgeList = new();
 
 			foreach (var edge in _edgeList[geometryGroup]) {
 
@@ -486,7 +486,7 @@ namespace Feat1.MeshCut.MeshCutModule {
 
 					var tmpEdge = edge.Start.PlanePosition.x < edge.End.PlanePosition.x
 						? edge
-						: new NonConvexMonotoneCutSurfaceEdge(edge.End, edge.Start);
+						: new EdgeTwoEarsTheorem(edge.End, edge.Start);
 
 					overlapEdgeList.Add(tmpEdge);
 

@@ -43,7 +43,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         protected override bool CheckMerge(NewPolygon target, NewPolygon key, bool isAfter) {
             if (target == null)
                 return false;
-            return isAfter ? target.NewEdgeToward.Domein == key.NewEdgeAway.Domein : target.NewEdgeAway.Domein == key.NewEdgeToward.Domein;
+            return isAfter ? target.TowardVertex.Domein == key.AwayVertex.Domein : target.AwayVertex.Domein == key.TowardVertex.Domein;
         }
 
         /// <summary>
