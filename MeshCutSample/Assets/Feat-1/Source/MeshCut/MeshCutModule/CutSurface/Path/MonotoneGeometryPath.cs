@@ -157,7 +157,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         ) {
 
 			if (_path.Count <= 4) {
-                SinpleMakePolygon(publicBoundingBox, localPlane, hasNewCutSurfaceMaterial, frontsideMesh, backsideMesh);
+                SimpleMakePolygon(publicBoundingBox, localPlane, hasNewCutSurfaceMaterial, frontsideMesh, backsideMesh);
             }
             else {
                 MultipleMakePolygon(publicBoundingBox, localPlane, hasNewCutSurfaceMaterial, frontsideMesh, backsideMesh);
@@ -291,7 +291,7 @@ namespace Feat1.MeshCut.MeshCutModule {
         /// このメソッドはパスに含まれる要素数が [3, 4] 個のときに呼び出される </br>
         /// 水平線を二本所持し，かつ 4 頂点しか持たないパスでは，パス内のソート時に例外が必要となるので，その特別処理も兼ねる
         /// </remarks>
-        private void SinpleMakePolygon(
+        private void SimpleMakePolygon(
             BoundingBox publicBoundingBox,
             Plane localPlane,
             bool hasNewCutSurfaceMaterial,
@@ -301,7 +301,7 @@ namespace Feat1.MeshCut.MeshCutModule {
 
             if (_path.Count < 3) {
 
-                Debug.LogWarning("MonotoneGeometryPath: SinpleMakePolygon() - path element count is less than 3, cannot create polygon.");
+                Debug.LogWarning("MonotoneGeometryPath: SimpleMakePolygon() - path element count is less than 3, cannot create polygon.");
                 return;
             }
             if (_path.Count == 3) {
