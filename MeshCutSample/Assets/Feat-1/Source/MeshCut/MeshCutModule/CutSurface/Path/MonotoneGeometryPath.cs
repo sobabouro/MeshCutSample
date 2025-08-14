@@ -10,10 +10,15 @@ namespace Feat1.MeshCut.MeshCutModule {
     /// </summary>
     public class MonotoneGeometryPath : IEnumerable<(VertexTwoEarsTheorem, VertexTwoEarsTheorem)> {
 
-        /// <summary>
-        /// (始点, 直前の頂点) ペアのパス
-        /// </summary>
-        private LinkedList<(VertexTwoEarsTheorem, VertexTwoEarsTheorem)> _path = new();
+		/// <summary>
+		/// 浮動小数点数の誤差吸収用
+		/// </summary>
+		private const float Epsilon = 0.0001f;
+
+		/// <summary>
+		/// (始点, 直前の頂点) ペアのパス
+		/// </summary>
+		private LinkedList<(VertexTwoEarsTheorem, VertexTwoEarsTheorem)> _path = new();
 
         /// <summary>
         /// パスの要素数を取得するプロパティ
@@ -391,7 +396,7 @@ namespace Feat1.MeshCut.MeshCutModule {
             for (int i = 1; i < sortedList.Count; i++) {
 
                 // 現在の要素のy座標が、前の要素のy座標と等しい場合
-                if (Mathf.Abs(sortedList[i].Item1.PlanePosition.y - sortedList[i - 1].Item1.PlanePosition.y) < float.Epsilon) {
+                if (Mathf.Abs(sortedList[i].Item1.PlanePosition.y - sortedList[i - 1].Item1.PlanePosition.y) < Epsilon) {
 
                     // y座標が同じ頂点群（サブリスト）の開始インデックスを見つける
                     int startIndex = i - 1;
