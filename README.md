@@ -53,6 +53,12 @@ Triangle (Submesh) 情報をもとに、三角形ポリゴンを構成する三�
     メッシュの切断機能のスクリプト群 <br>
     MeshCutSample/Assets/Feat-1/Source/
 
+* Class diagram / クラス図
+<figure align="center">
+    <img src="figs/class_map.jpg" width="70%">
+    <figcaption>Feat-1 Class diagram</figcaption>
+</figure>
+
 
 ## References / 参考文献
 [1] de Berg, M., Cheong, O., van Kreveld, M., & Overmars, M. (2022). *Computational geometry: Algorithms and applications* (3rd ed., Japanese translation by T. Asano). Kindai Kagaku Sha. / ドバーグ, M., チョン, O., ファンクリベルド, M., & オーバマーズ, M.（著）, 浅野哲夫（訳）. (2022). *コンピュータ・ジオメトリ ― 計算幾何学：アルゴリズムと応用*（第3版）. 近代科学社.
