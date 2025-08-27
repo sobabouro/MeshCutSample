@@ -54,10 +54,10 @@ Triangle (Submesh) 情報をもとに、三角形ポリゴンを構成する三�
     MeshCutSample/Assets/Feat-1/Source/
 
 * Class diagram / クラス図
-<figure align="center">
+<p align="center">
     <img src="figs/class_map.jpg" width="70%">
     <figcaption>Feat-1 Class diagram</figcaption>
-</figure>
+</p>
 
 
 ## References / 参考文献
