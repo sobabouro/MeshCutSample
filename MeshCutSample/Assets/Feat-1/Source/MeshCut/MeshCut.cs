@@ -52,7 +52,6 @@ namespace Feat1.MeshCut {
 			// frontside と backside の各頂点情報配列のインデックスの判定用
 			int IndexCountAssignedFrontside = 0, IndexCountAssignedBackside = 0;
 
-
 			// trackerArray の初期化と、切断処理を行わないポリゴンの格納を行う
 			for (int i = 0; i < originMesh.Vertices.Count; i++) {
 				getsideTruth[i] = localPlane.GetSide(originMesh.Vertices[i]);
