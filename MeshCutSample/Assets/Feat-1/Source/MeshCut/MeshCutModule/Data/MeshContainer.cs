@@ -1,5 +1,6 @@
 using System.Collections.Generic;
 using UnityEngine;
+using System;
 
 namespace Feat1.MeshCut.MeshCutModule {
 
@@ -66,6 +67,7 @@ namespace Feat1.MeshCut.MeshCutModule {
 			}
 			else {
 				Normals = new List<Vector3>();
+                throw new Exception("MeshContainer: The provided mesh does not have normals. Normals list initialized as empty.");
 			}
 
 			if (originMesh.uv != null && originMesh.uv.Length > 0) {
@@ -73,6 +75,7 @@ namespace Feat1.MeshCut.MeshCutModule {
 			}
 			else {
 				UVs = new List<Vector2>();
+				throw new Exception("MeshContainer: The provided mesh does not have UVs. UVs list initialized as empty.");
 			}
 
 			Submesh = new List<List<int>>();
@@ -266,7 +269,7 @@ namespace Feat1.MeshCut.MeshCutModule {
 			return mesh;
         }
 
-        private void DisplayMeshInfo() {
+        public void DisplayMeshInfo() {
             Debug.Log($"MeshContainer: ^^^^^^^^ DisplayMeshInfo() ^^^^^^^^");
             Debug.Log($"MeshContainer: Vertices count: {Vertices.Count}");
             Debug.Log($"----------------");
@@ -274,18 +277,18 @@ namespace Feat1.MeshCut.MeshCutModule {
                 Debug.Log($"MeshContainer: Vertex {i}: {Vertices[i]}");
             }
             Debug.Log($"----------------");
-            //Debug.Log($"MeshContainer: Normals count: {Normals.Count}");
-            //Debug.Log($"----------------");
-            //for (int i = 0; i < Normals.Count; i++) {
-            //    Debug.Log($"MeshContainer: Normal {i}: {Normals[i]}");
-            //}
-            //Debug.Log($"----------------");
-            //Debug.Log($"MeshContainer: UVs count: {UVs.Count}");
-            //Debug.Log($"----------------");
-            //for (int i = 0; i < UVs.Count; i++) {
-            //    Debug.Log($"MeshContainer: UV {i}: {UVs[i]}");
-            //}
-            //Debug.Log($"----------------");
+            Debug.Log($"MeshContainer: Normals count: {Normals.Count}");
+            Debug.Log($"----------------");
+            for (int i = 0; i < Normals.Count; i++) {
+                Debug.Log($"MeshContainer: Normal {i}: {Normals[i]}");
+            }
+            Debug.Log($"----------------");
+            Debug.Log($"MeshContainer: UVs count: {UVs.Count}");
+            Debug.Log($"----------------");
+            for (int i = 0; i < UVs.Count; i++) {
+                Debug.Log($"MeshContainer: UV {i}: {UVs[i]}");
+            }
+            Debug.Log($"----------------");
             Debug.Log($"MeshContainer: Submesh count: {Submesh.Count}");
             for (int i = 0; i < Submesh.Count; i++) {
                 Debug.Log($"----------------");
